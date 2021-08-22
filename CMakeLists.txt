@@ -38,6 +38,8 @@ else()
   set( CMAKE_INTERPROCEDURAL_OPTIMIZATION OFF )
 endif()
 
+option( MAKHBER_SANITIZE_ADDRESS "Build with Address sanitizer enabled" OFF )
+
 include( CheckCXXCompilerFlag )
 
 if( MSVC )
@@ -49,15 +51,25 @@ if( MSVC )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /W4 /permissive- \
 	 /wd4456 /wd4457 /wd4458 /wd4251 /wd4127 /wd4310 /wd4996" )
   if( CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
+    # Clang-cl
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path" )
   else()
+    # Parallel compilation
     add_compile_options( "/MP" )
+  endif()
+  # Address Sanitizer
+  if( MAKHBER_SANITIZE_ADDRESS )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fsanitize=address" )
   endif()
 else()
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -Wall -Wextra -pedantic" )
   check_cxx_compiler_flag("-ftrivial-auto-var-init=pattern" CXX_AUTO_INITIALIZE_PATTERN)
   if( CXX_AUTO_INITIALIZE_PATTERN )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftrivial-auto-var-init=pattern" )
+  endif()
+  # Address Sanitizer
+  if( MAKHBER_SANITIZE_ADDRESS )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer -fno-optimize-sibling-calls")
   endif()
 endif()
 

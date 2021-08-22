@@ -310,6 +310,7 @@ else()
       --qmake-setting "CONFIG += c++${CMAKE_CXX_STANDARD} strict_c++"
       --qmake-setting $<IF:$<CONFIG:Debug>,"CONFIG+=debug","CONFIG+=release">
       --qmake-setting CONFIG+=$<$<BOOL:${CMAKE_INTERPROCEDURAL_OPTIMIZATION}>:"ltcg">
+      --qmake-setting CONFIG+=$<$<BOOL:${MAKHBER_SANITIZE_ADDRESS}>:"sanitizer sanitize_address">
       --build-dir $<IF:$<BOOL:${MULTI_CONFIG}>,"build/$<CONFIG>","build">
     DEPENDS "makhber${QT_VERSION_MAJOR}.sip" libmakhber ${CMAKE_CURRENT_BINARY_DIR}/pyproject.toml
     COMMAND_EXPAND_LISTS
