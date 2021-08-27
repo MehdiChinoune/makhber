@@ -34,8 +34,8 @@ TEST_F(ApplicationWindowTest, arrowMarker)
     auto bbox = arrow.rect();
 
     EXPECT_NEAR(sqrt(sqr(bbox.left() - bbox.right()) + sqr(bbox.top() - bbox.bottom())),
-                arrow.length(), 0.1);
-    EXPECT_NEAR(sqrt(sqr(bbox.left()) + sqr(bbox.bottom())), arrow.dist(0, 0), 0.1);
+                arrow.length(), 1.0);
+    EXPECT_NEAR(sqrt(sqr(bbox.left()) + sqr(bbox.bottom())), arrow.dist(0, 0), 1.0);
 
     // test interaction with the mouse
     arrow.setEditable(true);
@@ -56,10 +56,10 @@ TEST_F(ApplicationWindowTest, arrowMarker)
         EXPECT_TRUE(arrow.eventFilter(nullptr, &mouseMove));
         EXPECT_TRUE(arrow.eventFilter(nullptr, &mouseRelease));
         auto newBBox = arrow.rect();
-        EXPECT_EQ(bbox.left(), newBBox.left());
-        EXPECT_EQ(bbox.right() + 10, newBBox.right());
-        EXPECT_EQ(bbox.bottom(), newBBox.bottom());
-        EXPECT_EQ(bbox.top() + 10, newBBox.top());
+        EXPECT_NEAR(bbox.left(), newBBox.left(), 1);
+        EXPECT_NEAR(bbox.right() + 10, newBBox.right(), 1);
+        EXPECT_NEAR(bbox.bottom(), newBBox.bottom(), 1);
+        EXPECT_NEAR(bbox.top() + 10, newBBox.top(), 1);
         bbox = newBBox;
     }
     {
@@ -74,10 +74,10 @@ TEST_F(ApplicationWindowTest, arrowMarker)
         EXPECT_TRUE(arrow.eventFilter(nullptr, &mouseMove));
         EXPECT_TRUE(arrow.eventFilter(nullptr, &mouseRelease));
         auto newBBox = arrow.rect();
-        EXPECT_EQ(bbox.left() - 10, newBBox.left());
-        EXPECT_EQ(bbox.right(), newBBox.right());
-        EXPECT_EQ(bbox.bottom() - 10, newBBox.bottom());
-        EXPECT_EQ(bbox.top(), newBBox.top());
+        EXPECT_NEAR(bbox.left() - 10, newBBox.left(), 1);
+        EXPECT_NEAR(bbox.right(), newBBox.right(), 1);
+        EXPECT_NEAR(bbox.bottom() - 10, newBBox.bottom(), 1);
+        EXPECT_NEAR(bbox.top(), newBBox.top(), 1);
         bbox = newBBox;
     }
     {
