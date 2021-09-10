@@ -40,6 +40,11 @@ endif()
 
 include( CheckCXXCompilerFlag )
 
+set( CMAKE_CONFIGURATION_TYPES "Release" "Debug" "RelWithDebInfo" )
+if( NOT MSVC )
+  list( APPEND CMAKE_CONFIGURATION_TYPES "Coverage" )
+endif()
+
 if( MSVC )
   # /wd4456 /wd4457 /wd4458 Silent "declaration of %1 hides %2 ..."
   # /wd4251 Silent dll-related warnings
@@ -59,6 +64,7 @@ else()
   if( CXX_AUTO_INITIALIZE_PATTERN )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftrivial-auto-var-init=pattern" )
   endif()
+  set( CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage" )
 endif()
 
 if( APPLE )
