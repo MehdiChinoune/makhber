@@ -23,6 +23,11 @@ set( CMAKE_C_STANDARD 11 )
 set( CMAKE_C_STANDARD_REQUIRED TRUE )
 set( CMAKE_C_EXTENSIONS OFF )
 
+set( CMAKE_CONFIGURATION_TYPES "Release" "Debug" "RelWithDebInfo" )
+if( NOT MSVC )
+  list( APPEND CMAKE_CONFIGURATION_TYPES "Coverage" )
+endif()
+
 if( MSVC )
   # /wd4456 /wd4457 /wd4458 Silent "declaration of %1 hides %2 ..."
   # /wd4251 Silent dll-related warnings
@@ -40,6 +45,7 @@ if( MSVC )
 else()
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -Wall -Wextra -pedantic" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic" )
+  set( CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} --coverage" )
 endif()
 
 if( APPLE )

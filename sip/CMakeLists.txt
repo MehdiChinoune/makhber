@@ -259,8 +259,10 @@ else()
 
   add_custom_command( OUTPUT ${module_file}
     COMMAND ${SIP_Build_EXECUTABLE} --verbose --concatenate 1
-      --qmake-setting $<$<CONFIG:Release>:"CONFIG+=release"> $<$<CONFIG:>:"CONFIG+=release"> $<$<CONFIG:Debug>:"CONFIG+=debug">
+      --qmake-setting $<$<CONFIG:Release>:"CONFIG+=release"> $<$<CONFIG:>:"CONFIG+=release"> $<$<CONFIG:Debug,Coverage>:"CONFIG+=debug">
       --qmake-setting QMAKE_CXX=${QMAKE_CXX}
+      --qmake-setting QMAKE_CXXFLAGS+=$<$<CONFIG:Coverage>:"--coverage">
+      --qmake-setting QMAKE_LFLAGS+=$<$<CONFIG:Coverage>:"--coverage">
     DEPENDS "makhber.sip" libmakhber ${CMAKE_CURRENT_BINARY_DIR}/pyproject.toml
     COMMAND_EXPAND_LISTS
     COMMENT "Building Makhber Python Module...\n"

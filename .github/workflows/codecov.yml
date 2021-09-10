@@ -1,0 +1,205 @@
+name: Code Coverage
+
+on: 
+  pull_request:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  Ubuntu:
+    runs-on: ubuntu-20.04
+    name: ubuntu-20.04
+    env:
+      QT_VER: 5.15.2
+      QWT_VER: 6.2.0
+
+    steps:
+      - name: Get Processor Info
+        run : |
+          lscpu | grep name
+          nproc
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-Qt-${{ env.QT_VER }}-Cache
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ env.QT_VER }}
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+
+      - name: Install prerequisties
+        run: |
+          sudo apt update
+          sudo apt install -y --no-install-recommends \
+            libglu1-mesa-dev \
+            libxcb-util1 \
+            libxcb-glx0 \
+            libxcb-icccm4 \
+            libxcb-image0 \
+            libxcb-keysyms1 \
+            libxcb-randr0 \
+            libxcb-render-util0 \
+            libxcb-render0 \
+            libxcb-shape0 \
+            libxcb-shm0 \
+            libxcb-sync1 \
+            libxcb-xfixes0 \
+            libxcb-xinerama0 \
+            libxcb-xinput0 \
+            libxcb-xkb1 \
+            libxcb1 \
+            libmuparser-dev \
+            libgsl-dev \
+            libgtest-dev \
+            xvfb \
+            lcov
+
+      - name: Get GCC version
+        id: gcc-version
+        run:
+          gcc_version=
+          echo "::set-output name=gcc_version::$(gcc -dumpversion)"
+
+      - name: Cache Qwt
+        id: cache-qwt
+        uses: actions/cache@v1
+        with:
+          path: ../Qwt
+          key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ env.QT_VER }}-gcc-${{ steps.gcc-version.outputs.gcc_version }}-Cache
+
+      - name: Build and install Qwt
+        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        run: |
+          wget https://downloads.sourceforge.net/qwt/qwt-${{ env.QWT_VER }}.tar.bz2
+          tar -xf qwt-${{ env.QWT_VER }}.tar.bz2 && cd qwt-${{ env.QWT_VER }}
+          sed -i "s|= \/usr\/local\/qwt-\$\$QWT\_VERSION|= ${GITHUB_WORKSPACE}/../Qwt|g" qwtconfig.pri
+          sed -i "s|QWT_CONFIG     \+= QwtExamples||g" qwtconfig.pri
+          sed -i "s|QWT_CONFIG     \+= QwtPlayground||g" qwtconfig.pri
+          sed -i "s|QWT_CONFIG     \+= QwtTests||g" qwtconfig.pri
+          qmake qwt.pro
+          make -j$(nproc)
+          make install
+
+      - name: Install Python packages
+        run: |
+          pip3 install sip pyqt5 pyqt-builder numpy
+
+      - name: Configuring
+        run: |
+          mkdir build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Coverage \
+            -DMAKHBER_SEARCH_FOR_UPDATES=OFF \
+            -DMAKHBER_DOWNLOAD_LINKS=OFF \
+            -DMAKHBER_SCRIPTING_PYTHON=ON \
+            -DMAKHBER_BUILD_TESTS=ON \
+            -DCMAKE_PREFIX_PATH=${GITHUB_WORKSPACE}/../Qwt
+
+      - name: Building
+        run: |
+          xvfb-run make -j$(nproc) -C build
+
+      - name: Testing
+        run: |
+          cd build
+          xvfb-run -a ctest --output-on-failure --repeat until-pass:3
+
+      - uses: codecov/codecov-action@v2
+
+      - name: Generate Coverage Report
+        run: |
+          lcov --directory . --capture --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --list coverage.info
+
+  macos:
+    runs-on: macos-11
+    name: macos
+    env:
+      QT_VER: 5.15.2
+      QWT_VER: 6.2.0
+
+    steps:
+      - name: Get Processor Info
+        run : |
+          sysctl -n machdep.cpu.brand_string
+          sysctl -n hw.logicalcpu
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-Qt-${{ env.QT_VER }}-Cache
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: ${{ env.QT_VER }}
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+
+      - name: Install prerequisties
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+        run: |
+          brew install --display-times muparser gsl gl2ps googletest lcov
+
+      - name: Cache Qwt
+        id: cache-qwt
+        uses: actions/cache@v1
+        with:
+          path: ../Qwt
+          key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ env.QT_VER }}-Cache
+
+      - name: Build and install Qwt
+        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        run: |
+          wget https://downloads.sourceforge.net/qwt/qwt-${{ env.QWT_VER }}.tar.bz2
+          tar -xf qwt-${{ env.QWT_VER }}.tar.bz2 && cd qwt-${{ env.QWT_VER }}
+          sed -i .bak "s|= \/usr\/local\/qwt-\$\$QWT\_VERSION|= ${GITHUB_WORKSPACE}/../Qwt|g" qwtconfig.pri
+          sed -i .bak "s|QWT_CONFIG     \+= QwtExamples||g" qwtconfig.pri
+          sed -i .bak "s|QWT_CONFIG     \+= QwtPlayground||g" qwtconfig.pri
+          sed -i .bak "s|QWT_CONFIG     \+= QwtTests||g" qwtconfig.pri
+          qmake qwt.pro
+          make -j$(sysctl -n hw.logicalcpu)
+          make install
+
+      - name: Configuring
+        run: |
+          mkdir build && cd build
+          cmake .. \
+            -DCMAKE_BUILD_TYPE=Coverage \
+            -DMAKHBER_BUILD_TESTS=ON \
+            -DCMAKE_PREFIX_PATH=${GITHUB_WORKSPACE}/../Qwt
+
+      - name: Building
+        run: |
+          make -j$(sysctl -n hw.logicalcpu) -C build
+
+      - name: Testing
+        run: |
+          export DYLD_FALLBACK_FRAMEWORK_PATH=${GITHUB_WORKSPACE}/../Qwt/lib
+          cd build
+          ctest --output-on-failure --repeat until-pass:3
+
+      - name: Generate Coverage Report
+        run: |
+          lcov --directory . --capture --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --list coverage.info
+
+      - uses: codecov/codecov-action@v2
