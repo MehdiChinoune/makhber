@@ -114,13 +114,13 @@ jobs:
           cd build
           xvfb-run -a ctest --output-on-failure --repeat until-pass:3
 
-      - uses: codecov/codecov-action@v2
-
       - name: Generate Coverage Report
         run: |
           lcov --directory . --capture --output-file coverage.info
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           lcov --list coverage.info
+
+      - uses: codecov/codecov-action@v2
 
   macos:
     runs-on: macos-11
