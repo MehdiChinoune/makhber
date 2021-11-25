@@ -55,34 +55,41 @@ parts:
     build-packages:
       - g++
       - git
-      - libqt5svg5-dev
-      - libqt5opengl5-dev
-      - qttools5-dev
+      - libqt6svg6-dev
+      - libqt6opengl6-dev
+      - qt6-l10n-tools
+      - qt6-tools-dev
+      - qt6-tools-dev-tools
       - pkgconf
+      - libxkbcommon-dev
+      - libvulkan-dev
+      - libglu1-mesa-dev
     stage-packages:
       - libglu1-mesa
       - libpython3.10
-      - libqt5svg5
-      - libqt5opengl5
-      - libqt5printsupport5
-      - qttranslations5-l10n
-      - qtwayland5
+      - libqt6svg6
+      - libqt6openglwidgets6
+      - libqt6printsupport6
+      - qt6-translations-l10n
+      - qt6-wayland
+      - qt6-qpa-plugins
     override-pull: |
       craftctl default
       craftctl set version="$(git describe --tags)"
     after:
-      - desktop-qt5
+      - desktop-qt6
       - gsl
       - muparser
       - qwt
       - gl2ps
-      - pyqt5
-      - pyqt5-sip
-  desktop-qt5:
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+      - pyqt6
+      - pyqt6-sip
+  desktop-qt6:
+    source: https://github.com/MehdiChinoune/snapcraft-desktop-helpers.git
+    source-branch: qt6
     source-subdir: qt
     plugin: make
-    make-parameters: ["FLAVOR=qt5"]
+    make-parameters: ["QT_VERSION=6"]
   gsl:
     source-type: tar
     source: https://ftp.gnu.org/gnu/gsl/gsl-2.7.1.tar.gz
@@ -126,15 +133,15 @@ parts:
       - g++
       - libgles-dev
     stage-packages:
-      - libqt5svg5
-      - libqt5opengl5
+      - libqt6svg6
+      - libqt6opengl6
     override-build: |
       sed -i "s|^\\s*QWT_INSTALL_PREFIX.*$|QWT_INSTALL_PREFIX=$CRAFT_PART_INSTALL/usr|g" qwtconfig.pri
       sed -i "s|^QWT_CONFIG\\s*+=\\s*QwtDesigner$|#|g" qwtconfig.pri
       sed -i "s|^QWT_CONFIG\\s*+=\\s*QwtExamples$|#|g" qwtconfig.pri
       sed -i "s|^QWT_CONFIG\\s*+=\\s*QwtPlayground$|#|g" qwtconfig.pri
       sed -i "s|^QWT_CONFIG\\s*+=\\s*QwtTests$|#|g" qwtconfig.pri
-      qmake \
+      qmake6 \
         CONFIG-=debug_and_release \
         CONFIG+=release \
         qwt.pro
@@ -162,10 +169,10 @@ parts:
       - -usr/lib/libgl2ps.a
       - -usr/include
       - -usr/share
-  pyqt5:
+  pyqt6:
     source-type: tar
-    source: https://pypi.python.org/packages/source/P/PyQt5/PyQt5-5.15.10.tar.gz
-    source-checksum: sha256/d46b7804b1b10a4ff91753f8113e5b5580d2b4462f3226288e2d84497334898a
+    source: https://pypi.python.org/packages/source/P/PyQt6/PyQt6-6.7.0.tar.gz
+    source-checksum: sha256/3d31b2c59dc378ee26e16586d9469842483588142fc377280aad22aaf2fa6235
     plugin: make
     build-packages:
       - g++
@@ -174,9 +181,9 @@ parts:
       - libpython3-dev
       - python3-pip
     stage-packages:
-      - libqt5svg5
-      - libqt5opengl5
-      - libqt5printsupport5
+      - libqt6svg6
+      - libqt6opengl6
+      - libqt6printsupport6
     build-environment:
       - PATH: $HOME/.local/bin:$PATH
     override-build: |
@@ -185,6 +192,7 @@ parts:
       sip-build --confirm-license \
         --build-dir ../build \
         --target-dir $CRAFT_PART_INSTALL/usr/lib/python3/dist-packages \
+        --qmake=/usr/bin/qmake6 \
         --no-make \
         --no-tools \
         --no-designer-plugin \
@@ -193,35 +201,31 @@ parts:
         --disable QtDBus \
         --disable QtDesigner \
         --disable QtHelp \
-        --disable QtLocation \
         --disable QtMultimedia \
         --disable QtMultimediaWidgets \
         --disable QtNfc \
         --disable QtPositioning \
         --disable QtQml \
         --disable QtQuick \
+        --disable QtQuick3D \
         --disable QtQuickWidgets \
         --disable QtRemoteObjects \
         --disable QtSensors \
         --disable QtSerialPort \
         --disable QtSql \
+        --disable QtSvgWidgets \
         --disable QtTest \
-        --disable QtTextToSpeech \
         --disable QtWebChannel \
-        --disable QtWebKit \
-        --disable QtWebKitWidgets \
         --disable QtWebSockets \
-        --disable QtX11Extras \
         --disable QtXml \
-        --disable QtXmlPatterns \
         --verbose
       cd $CRAFT_PART_BUILD
       craftctl default
     prime:
-      - -usr/lib/python3/dist-packages/PyQt5/bindings
-  pyqt5-sip:
+      - -usr/lib/python3/dist-packages/PyQt6/bindings
+  pyqt6-sip:
     plugin: nil
     build-packages:
       - python3-pip
     override-build:
-      pip3 install pyqt5-sip --no-deps --target=$CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
+      pip3 install pyqt6-sip --no-deps --target=$CRAFT_PART_INSTALL/usr/lib/python3/dist-packages
