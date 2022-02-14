@@ -217,6 +217,55 @@ jobs:
           cd build
           ctest -C RelWithDebInfo --output-on-failure --repeat until-pass:3
 
+  MINGW:
+    name: MINGW-${{ matrix.msystem }}
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        msystem: [UCRT64, CLANG64]
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Get Processor Info
+        shell: pwsh
+        run : |
+          Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.msystem }}
+          release: false
+          update: true
+          pacboy: >-
+            cc:p cmake:p ninja:p qt5-base:p qt5-svg:p qt5-tools:p qwt-qt5:p gsl:p muparser:p
+            gl2ps:p pyqt-builder:p python-pyqt5:p python-numpy:p gtest:p make
+
+      - name: Configuring
+        run: |
+          mkdir build && cd build
+          cmake .. \
+            -GNinja \
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DBUILD_SHARED_LIBS=ON \
+            -DMAKHBER_SCRIPTING_PYTHON=ON \
+            -DMAKHBER_BUILD_TESTS=ON
+
+      - name: Building
+        run: |
+          cmake --build build
+
+      - name: Testing
+        run: |
+          cd build
+          PYTHONHOME=${MINGW_PREFIX} ctest --output-on-failure --repeat until-pass:3
+
   macos:
     runs-on: macos-12
     name: macos
