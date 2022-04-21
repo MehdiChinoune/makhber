@@ -1,0 +1,47 @@
+compute_engine_instance:
+  image_project: freebsd-org-cloud-dev
+  image: family/freebsd-15-0-amd64-ufs
+  platform: freebsd
+  cpu: 4
+  memory: 4G
+
+task:
+  env:
+    CIRRUS_CLONE_DEPTH: 1
+    CIRRUS_CLONE_SUBMODULES: true
+  cpuinfo_script:
+    - sysctl hw.model hw.machine hw.ncpu
+  install_script:
+    - pkg update
+    - pkg install -y
+      llvm21-lite
+      cmake-core
+      ninja
+      pkgconf
+      qt6-base
+      qt6-svg
+      gsl
+      muparser
+      liborigin
+      qwt6-qt6
+      gl2ps
+      libGLU
+      vulkan-headers
+      qt6-tools
+      py311-qt6-pyqt
+      py311-sip
+      py311-PyQt-builder
+      googletest
+      xorg-vfbserver
+  configure_script:
+    - cmake
+      --preset default
+      -GNinja
+      -DCMAKE_BUILD_TYPE=Debug
+      -DCMAKE_CXX_COMPILER=clang++21
+      -DPython3_EXECUTABLE=/usr/local/bin/python3.11
+  build_script:
+    - cmake --build --preset default
+  test_script:
+    - Xvfb :1 -screen 0 640x480x24 &
+    - DISPLAY=:1 ctest --preset default
