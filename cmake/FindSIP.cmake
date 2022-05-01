@@ -27,9 +27,11 @@ The following cache variables may also be set:
   The directory containing the SIP executables.
 ]]
 
-set( SIP_COMPONENTS Legacy Build Module )
+if( NOT SIP_FIND_COMPONENTS )
+  set( SIP_FIND_COMPONENTS Build Module )
+endif()
 
-foreach( comp ${SIP_COMPONENTS} )
+foreach( comp ${SIP_FIND_COMPONENTS} )
 
   if( ${comp} STREQUAL "Legacy" )
     set( sip_names sip sip5 )
@@ -73,6 +75,7 @@ include( FindPackageHandleStandardArgs )
 
 find_package_handle_standard_args( SIP
   REQUIRED_VARS SIP_EXECUTABLES
+  HANDLE_COMPONENTS
   VERSION_VAR SIP_VERSION
 )
 
