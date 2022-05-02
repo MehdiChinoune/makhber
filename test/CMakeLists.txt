@@ -79,9 +79,11 @@ if( MAKHBER_SCRIPTING_PYTHON )
       COMMAND makhber -l=en -x ${pythonTest}
       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tmp
     )
-    set_tests_properties( python_${test_name} PROPERTIES
-      ENVIRONMENT PYTHONPATH=$<IF:$<BOOL:${MULTI_CONFIG}>,${SIP_BUILD_PATH}/$<CONFIG>/makhber,${SIP_BUILD_PATH}>
-    )
+    if( NOT MAKHBER_EMBED_PYTHON_MODULE )
+      set_tests_properties( python_${test_name} PROPERTIES
+        ENVIRONMENT PYTHONPATH=$<IF:$<BOOL:${MULTI_CONFIG}>,${SIP_BUILD_PATH}/$<CONFIG>/makhber,${SIP_BUILD_PATH}>
+      )
+    endif()
   endforeach()
 
 endif()

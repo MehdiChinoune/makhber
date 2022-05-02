@@ -51,6 +51,10 @@
 
 #include <iostream>
 
+#ifdef EMBED_PYTHON_MODULE
+PyMODINIT_FUNC PyInit_makhber(void);
+#endif
+
 #define str(x) xstr(x)
 #define xstr(x) #x
 
@@ -192,6 +196,9 @@ PythonScripting::PythonScripting(ApplicationWindow *parent, bool batch)
 #ifdef PYTHONHOME
         Py_SetPythonHome(Py_DecodeLocale(str(PYTHONHOME), NULL));
 #endif
+#ifdef EMBED_PYTHON_MODULE
+        PyImport_AppendInittab("makhber", &PyInit_makhber);
+#endif
         Py_Initialize();
         if (!Py_IsInitialized())
             return;
@@ -252,7 +259,11 @@ PythonScripting::PythonScripting(ApplicationWindow *parent, bool batch)
     } else {
         QMessageBox::warning(d_parent, tr("Loading Module Failure"),
                              tr("Failed to load makhber module."
+#ifndef EMBED_PYTHON_MODULE
                                 "Try exporting PYTHONPATH to the directory of makhber module."));
+#else
+                                ));
+#endif
         PyErr_Print();
     }
 
