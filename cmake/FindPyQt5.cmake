@@ -50,14 +50,6 @@ find_path( PyQt5_INCLUDE_DIR
   PATH_SUFFIXES "PyQt5" "PyQt5/bindings" "bindings"
   )
 
-if( ${SIP_VERSION} LESS 5 )
-  execute_process(
-    COMMAND ${Python3_EXECUTABLE} -c "from PyQt5.QtCore import PYQT_CONFIGURATION; print(PYQT_CONFIGURATION['sip_flags'].replace(' ',';'))"
-    OUTPUT_VARIABLE PyQt5_FLAGS
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-endif()
-
 execute_process(
   COMMAND ${Python3_EXECUTABLE} -c "from PyQt5.QtCore import PYQT_VERSION_STR; print(PYQT_VERSION_STR)"
   OUTPUT_VARIABLE PyQt5_VERSION
@@ -66,31 +58,21 @@ execute_process(
 
 execute_process(
   COMMAND ${Python3_EXECUTABLE} -c "import PyQt5.sip"
-  RESULT_VARIABLE _PyQt5_SIP
+  RESULT_VARIABLE _No_PyQt5_SIP
   ERROR_QUIET
 )
-# An error returns 1 which considere by cmake as true
-if( _PyQt5_SIP )
+# An error returns 1 which considered by cmake as true
+if( _No_PyQt5_SIP )
   set( PyQt5_SIP OFF )
 else()
   set( PyQt5_SIP ON )
 endif()
 
 include(FindPackageHandleStandardArgs)
-if( ${SIP_VERSION} VERSION_GREATER_EQUAL 5 )
-  find_package_handle_standard_args( PyQt5
-    REQUIRED_VARS
-      PyQt5_INCLUDE_DIR
-    VERSION_VAR PyQt5_VERSION
-  )
-else()
-  find_package_handle_standard_args( PyQt5
-    REQUIRED_VARS
-      PyQt5_INCLUDE_DIR
-      PyQt5_FLAGS
-    VERSION_VAR PyQt5_VERSION
-  )
-endif()
+find_package_handle_standard_args( PyQt5
+  REQUIRED_VARS PyQt5_INCLUDE_DIR
+  VERSION_VAR PyQt5_VERSION
+)
 
 if( PyQt5_FOUND )
   set( PyQt5_INCLUDE_DIRS ${PyQt5_INCLUDE_DIR} )
