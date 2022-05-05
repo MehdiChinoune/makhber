@@ -8,7 +8,7 @@ on:
 
 jobs:
   Ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: ubuntu-20.04
     env:
       QT_VER: 5.15.2
@@ -43,22 +43,6 @@ jobs:
           sudo apt update
           sudo apt install -y --no-install-recommends \
             libglu1-mesa-dev \
-            libxcb-util1 \
-            libxcb-glx0 \
-            libxcb-icccm4 \
-            libxcb-image0 \
-            libxcb-keysyms1 \
-            libxcb-randr0 \
-            libxcb-render-util0 \
-            libxcb-render0 \
-            libxcb-shape0 \
-            libxcb-shm0 \
-            libxcb-sync1 \
-            libxcb-xfixes0 \
-            libxcb-xinerama0 \
-            libxcb-xinput0 \
-            libxcb-xkb1 \
-            libxcb1 \
             libmuparser-dev \
             libgsl-dev \
             libgl2ps-dev \
