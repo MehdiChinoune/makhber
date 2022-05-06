@@ -207,7 +207,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        msystem: [UCRT64, CLANG64]
+        include:
+          - msystem: UCRT64
+            repo: ucrt
+          - msystem: CLANG64
+            repo: clang
+    env:
+      mingw_repo_sf: https://sourceforge.net/projects/mingw-updates/files/${{ matrix.repo }}
     defaults:
       run:
         shell: msys2 {0}
@@ -231,6 +237,10 @@ jobs:
             cc:p cmake:p ninja:p qt5-base:p qt5-svg:p qt5-tools:p qwt-qt5:p gsl:p muparser:p
             gl2ps:p pyqt-builder:p python-pyqt5:p python-numpy:p gtest:p make
 
+      - name: Add ${{ matrix.repo }} repo
+        run: |
+          sed -i '1s|^|[${{ matrix.repo }}]\nServer = ${{ env.mingw_repo_sf }}\nSigLevel = Never\n|' /etc/pacman.conf
+          pacman --noconfirm -Suy
       - name: Configuring
         run: |
           mkdir build && cd build
