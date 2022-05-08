@@ -9054,10 +9054,7 @@ Graph *ApplicationWindow::openGraph(ApplicationWindow *app, MultiLayer *plot, QJ
                                  jsCurve.value("masterXColumn").toString(), errTable, title,
                                  static_cast<Qt::Orientation>(jsCurve.value("direction").toInt()),
                                  jsCurve.value("width").toInt(), jsCurve.value("capLength").toInt(),
-                                 QColor(COLORVALUE(jsCurve.value("color").toString())),
-                                 jsCurve.value("throughSymbol").toInt(),
-                                 jsCurve.value("plusSide").toInt(),
-                                 jsCurve.value("minusSide").toInt());
+                                 QColor(COLORVALUE(jsCurve.value("color").toString())));
             }
             curveID++;
         } else if (curveType == "spectrogram") {

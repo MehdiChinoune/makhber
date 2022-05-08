@@ -989,8 +989,7 @@ public:
 
   void addErrorBars(const QString&, Table *, const QString&,
           Qt::Orientation type = Qt::Vertical, int width = 1, int cap = 8,
-          const QColor& color = QColor(Qt::black), bool through = true, bool minus = true,
-          bool plus = true);
+          const QColor& color = QColor(Qt::black));
 
   void addArrow(ArrowMarker*);
 

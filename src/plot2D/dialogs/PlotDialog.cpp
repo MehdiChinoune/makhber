@@ -824,10 +824,6 @@ void PlotDialog::initErrorsPage()
     auto *gb1 = new QGroupBox(tr("Direction"));
 
     auto *vl = new QVBoxLayout(gb1);
-    plusBox = new QCheckBox(tr("Plus"));
-    vl->addWidget(plusBox);
-    minusBox = new QCheckBox(tr("Minus"));
-    vl->addWidget(minusBox);
     xBox = new QCheckBox(tr("&X Error Bar"));
     vl->addWidget(xBox);
     vl->addWidget(xBox);
@@ -860,8 +856,6 @@ void PlotDialog::initErrorsPage()
     capBox->setEditable(true);
     gl->addWidget(capBox, 2, 1);
 
-    throughBox = new QCheckBox(tr("Through Symbol"));
-    gl->addWidget(throughBox, 3, 0);
     gl->setRowStretch(4, 1);
 
     errorsPage = new QWidget();
@@ -1155,8 +1149,7 @@ void PlotDialog::changeErrorBarsPlus()
 
     graph->updateErrorBars((QwtErrorPlotCurve *)item->plotItem(), xBox->isChecked(),
                            widthBox->currentText().toInt(), capBox->currentText().toInt(),
-                           colorBox->color(), plusBox->isChecked(), minusBox->isChecked(),
-                           throughBox->isChecked());
+                           colorBox->color());
 }
 
 void PlotDialog::changeErrorBarsMinus()
@@ -1173,8 +1166,7 @@ void PlotDialog::changeErrorBarsMinus()
 
     graph->updateErrorBars((QwtErrorPlotCurve *)item->plotItem(), xBox->isChecked(),
                            widthBox->currentText().toInt(), capBox->currentText().toInt(),
-                           colorBox->color(), plusBox->isChecked(), minusBox->isChecked(),
-                           throughBox->isChecked());
+                           colorBox->color());
 }
 
 void PlotDialog::changeErrorBarsThrough()
@@ -1191,8 +1183,7 @@ void PlotDialog::changeErrorBarsThrough()
 
     graph->updateErrorBars((QwtErrorPlotCurve *)item->plotItem(), xBox->isChecked(),
                            widthBox->currentText().toInt(), capBox->currentText().toInt(),
-                           colorBox->color(), plusBox->isChecked(), minusBox->isChecked(),
-                           throughBox->isChecked());
+                           colorBox->color());
 }
 
 void PlotDialog::changeErrorBarsType()
@@ -1209,8 +1200,7 @@ void PlotDialog::changeErrorBarsType()
 
     graph->updateErrorBars((QwtErrorPlotCurve *)item->plotItem(), xBox->isChecked(),
                            widthBox->currentText().toInt(), capBox->currentText().toInt(),
-                           colorBox->color(), plusBox->isChecked(), minusBox->isChecked(),
-                           throughBox->isChecked());
+                           colorBox->color());
 }
 
 void PlotDialog::pickErrorBarsColor(QColor color)
@@ -1226,8 +1216,7 @@ void PlotDialog::pickErrorBarsColor(QColor color)
         return;
 
     graph->updateErrorBars((QwtErrorPlotCurve *)item->plotItem(), xBox->isChecked(),
-                           widthBox->currentText().toInt(), capBox->currentText().toInt(), color,
-                           plusBox->isChecked(), minusBox->isChecked(), throughBox->isChecked());
+                           widthBox->currentText().toInt(), capBox->currentText().toInt(), color);
 }
 
 void PlotDialog::showAreaColor(bool show)
@@ -1599,9 +1588,6 @@ void PlotDialog::setActiveCurve(CurveTreeItem *item)
             xBox->setChecked(err->xErrors());
             widthBox->setEditText(QString::number(err->width()));
             capBox->setEditText(QString::number(err->capLength()));
-            throughBox->setChecked(err->throughSymbol());
-            plusBox->setChecked(err->plusSide());
-            minusBox->setChecked(err->minusSide());
             colorBox->setColor(err->color());
         }
     }
@@ -1856,8 +1842,7 @@ bool PlotDialog::acceptParams()
     } else if (privateTabWidget->currentWidget() == errorsPage) {
         graph->updateErrorBars((QwtErrorPlotCurve *)item->plotItem(), xBox->isChecked(),
                                widthBox->currentText().toInt(), capBox->currentText().toInt(),
-                               colorBox->color(), plusBox->isChecked(), minusBox->isChecked(),
-                               throughBox->isChecked());
+                               colorBox->color());
         return true;
     } else if (privateTabWidget->currentWidget() == piePage) {
         auto *pie = (QwtPieCurve *)plotItem;

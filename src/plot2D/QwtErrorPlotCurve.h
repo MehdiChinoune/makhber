@@ -63,15 +63,6 @@ public:
     bool xErrors();
     void setXErrors(bool yes);
 
-    bool throughSymbol() { return through; };
-    void drawThroughSymbol(bool yes) { through = yes; };
-
-    bool plusSide() { return plus; };
-    void drawPlusSide(bool yes) { plus = yes; };
-
-    bool minusSide() { return minus; };
-    void drawMinusSide(bool yes) { minus = yes; };
-
     //! Returns the master curve to which this error bars curve is attached.
     DataCurve *masterCurve() { return d_master_curve; };
     void setMasterCurve(DataCurve *c);
@@ -99,8 +90,6 @@ private:
 
     //! Length of the bar cap decoration
     int cap;
-
-    bool plus, minus, through;
 
     //! Reference to the master curve to which this error bars curve is attached.
     DataCurve *d_master_curve;

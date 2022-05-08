@@ -2426,9 +2426,6 @@ void Graph::saveCurves(QJsonObject *jsObject)
                 jsCurve.insert("width", er->width());
                 jsCurve.insert("capLength", er->capLength());
                 jsCurve.insert("color", COLORNAME(er->color()));
-                jsCurve.insert("throughSymbol", er->throughSymbol());
-                jsCurve.insert("plusSide", er->plusSide());
-                jsCurve.insert("minusSide", er->minusSide());
             }
             jsCurves.append(jsCurve);
         }
@@ -2974,38 +2971,32 @@ void Graph::updateCurveLayout(int index, const CurveLayout *cL)
     c->setBrush(brush);
 }
 
-void Graph::updateErrorBars(QwtErrorPlotCurve *er, bool xErr, int width, int cap, const QColor &c,
-                            bool plus, bool minus, bool through)
+void Graph::updateErrorBars(QwtErrorPlotCurve *er, bool xErr, int width, int cap, const QColor &c)
 {
     if (!er)
         return;
 
-    if (er->width() == width && er->capLength() == cap && er->color() == c && er->plusSide() == plus
-        && er->minusSide() == minus && er->throughSymbol() == through && er->xErrors() == xErr)
+    if (er->width() == width && er->capLength() == cap && er->color() == c && er->xErrors() == xErr)
         return;
 
     er->setWidth(width);
     er->setCapLength(cap);
     er->setColor(c);
     er->setXErrors(xErr);
-    er->drawThroughSymbol(through);
-    er->drawPlusSide(plus);
-    er->drawMinusSide(minus);
 
     d_plot->replot();
     Q_EMIT modifiedGraph();
 }
 
 bool Graph::addErrorBars(const QString &yColName, Table *errTable, const QString &errColName,
-                         Qt::Orientation type, int width, int cap, const QColor &color,
-                         bool through, bool minus, bool plus)
+                         Qt::Orientation type, int width, int cap, const QColor &color)
 {
     QList<int> keys = d_plot->curveKeys();
     for (int i = 0; i < n_curves; i++) {
         auto *c = dynamic_cast<DataCurve *>(d_plot->curve(keys[i]));
         if (c && c->title().text() == yColName && c_type[i] != ErrorBars) {
             return addErrorBars(c->xColumnName(), yColName, errTable, errColName, type, width, cap,
-                                color, through, minus, plus);
+                                color);
         }
     }
     return false;
@@ -3013,7 +3004,7 @@ bool Graph::addErrorBars(const QString &yColName, Table *errTable, const QString
 
 bool Graph::addErrorBars(const QString &xColName, const QString &yColName, Table *errTable,
                          const QString &errColName, Qt::Orientation type, int width, int cap,
-                         const QColor &color, bool through, bool minus, bool plus)
+                         const QColor &color)
 {
     DataCurve *master_curve = masterCurve(xColName, yColName);
     if (!master_curve)
@@ -3024,9 +3015,6 @@ bool Graph::addErrorBars(const QString &xColName, const QString &yColName, Table
     er->setCapLength(cap);
     er->setColor(color);
     er->setWidth(width);
-    er->drawPlusSide(plus);
-    er->drawMinusSide(minus);
-    er->drawThroughSymbol(through);
 
     c_type.resize(++n_curves);
     c_type[n_curves - 1] = ErrorBars;

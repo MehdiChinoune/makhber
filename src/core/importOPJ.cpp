@@ -723,8 +723,7 @@ bool ImportOPJ::importGraphs(const OriginFile &opj)
                                 QString("%1_%2").arg(tableName,
                                                      decodeMbcs(_curve.yColumnName.c_str())),
                                 ((flags & 0x10) == 0x10 ? Qt::Horizontal : Qt::Vertical),
-                                ceil(_curve.lineWidth), ceil(_curve.symbolSize), QColor(Qt::black),
-                                (flags & 0x40) == 0x40, (flags & 2) == 2, (flags & 1) == 1);
+                                ceil(_curve.lineWidth), ceil(_curve.symbolSize), QColor(Qt::black));
                     } else if (style == Graph::Histogram) {
 
                         graph->insertCurve(

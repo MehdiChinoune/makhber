@@ -44,9 +44,6 @@ QwtErrorPlotCurve::QwtErrorPlotCurve(Qt::Orientation orientation, Table *t, cons
 {
     cap = 10;
     type = orientation;
-    plus = true;
-    minus = true;
-    through = false;
     setType(Graph::ErrorBars);
 }
 
@@ -54,9 +51,6 @@ QwtErrorPlotCurve::QwtErrorPlotCurve(Table *t, const QString &name)
     : DataCurve(t, QString(), name), d_master_curve(nullptr)
 {
     cap = 10;
-    plus = true;
-    minus = true;
-    through = false;
     type = Qt::Vertical;
     setType(Graph::ErrorBars);
 }
@@ -65,9 +59,6 @@ void QwtErrorPlotCurve::copy(const QwtErrorPlotCurve *e)
 {
     cap = e->cap;
     type = e->type;
-    plus = e->plus;
-    minus = e->minus;
-    through = e->through;
     setPen(e->pen());
     err = e->err;
 }
@@ -87,14 +78,6 @@ void QwtErrorPlotCurve::draw(QPainter *painter, const QwtScaleMap &xMap, const Q
 void QwtErrorPlotCurve::drawErrorBars(QPainter *painter, const QwtScaleMap &xMap,
                                       const QwtScaleMap &yMap, int from, int to) const
 {
-    int sh = 0;
-    // int sw = 0;
-    const QwtSymbol *symbol = d_master_curve->symbol();
-    if (symbol->style() != QwtSymbol::NoSymbol) {
-        sh = symbol->size().height();
-        // sw = symbol.size().width();
-    }
-
     double d_xOffset = 0.0;
     double d_yOffset = 0.0;
     if (d_master_curve->type() == Graph::VerticalBars)
@@ -104,7 +87,6 @@ void QwtErrorPlotCurve::drawErrorBars(QPainter *painter, const QwtScaleMap &xMap
 
     QwtIntervalSymbol errorBar(QwtIntervalSymbol::Bar);
     errorBar.setWidth(cap);
-
     for (int i = from; i <= to; i++) {
         const int xi = xMap.transform(sample(i).x() + d_xOffset);
         const int yi = yMap.transform(sample(i).y() + d_yOffset);
@@ -112,77 +94,21 @@ void QwtErrorPlotCurve::drawErrorBars(QPainter *painter, const QwtScaleMap &xMap
         if (type == Qt::Vertical) {
             int y_plus = yMap.transform(sample(i).y() + err[i]);
             int y_minus = yMap.transform(sample(i).y() - err[i]);
-            if (through && plus && minus) {
-                errorBar.draw(painter, type, QPointF(xi, y_minus), QPointF(xi, y_plus));
-                continue;
-            }
+            errorBar.draw(painter, type, QPointF(xi, y_minus), QPointF(xi, y_plus));
 
-            bool y_minus_is_finite = true;
-
-            /*if (yMap.transformation()->type() == QwtScaleTransformation::Log10 && err[i] >= y(i))
+            /*bool y_minus_is_finite = true;
+            if (yMap.transformation()->type() == QwtScaleTransformation::Log10 && err[i] >= y(i))
             { y_minus = yMap.transform(qMin(yMap.s1(), yMap.s2())); y_minus_is_finite = false;
             }*/
-
-            // draw caps
-            if (plus)
-                QwtPainter::drawLine(painter, xi - cap / 2, y_plus, xi + cap / 2, y_plus);
-            if (minus && y_minus_is_finite)
-                QwtPainter::drawLine(painter, xi - cap / 2, y_minus, xi + cap / 2, y_minus);
-
-            // draw vertical line
-            if (through) {
-                if (plus)
-                    QwtPainter::drawLine(painter, xi, yi, xi, y_plus);
-                else if (minus)
-                    QwtPainter::drawLine(painter, xi, y_minus, xi, yi);
-            } else if (y_plus <= y_minus) {
-                if (plus && y_plus < yi - sh / 2)
-                    QwtPainter::drawLine(painter, xi, yi - sh / 2, xi, y_plus);
-                if (minus && y_minus > yi + sh / 2)
-                    QwtPainter::drawLine(painter, xi, yi + sh / 2, xi, y_minus);
-            } else { // inverted scale
-                if (plus && y_plus > yi + sh / 2)
-                    QwtPainter::drawLine(painter, xi, yi + sh / 2, xi, y_plus);
-                if (minus && y_minus < yi - sh / 2)
-                    QwtPainter::drawLine(painter, xi, yi - sh / 2, xi, y_minus);
-            }
         } else if (type == Qt::Horizontal) {
             int x_plus = xMap.transform(sample(i).x() + err[i]);
             int x_minus = xMap.transform(sample(i).x() - err[i]);
-            if (through && plus && minus) {
-                errorBar.draw(painter, type, QPointF(x_minus, yi), QPointF(x_plus, yi));
-                continue;
-            }
+            errorBar.draw(painter, type, QPointF(x_minus, yi), QPointF(x_plus, yi));
 
-            bool x_minus_is_finite = true;
-
-            /*if (xMap.transformation()->type() == QwtScaleTransformation::Log10 && err[i] >= x(i))
+            /*bool x_minus_is_finite = true;
+            if (xMap.transformation()->type() == QwtScaleTransformation::Log10 && err[i] >= x(i))
             { x_minus = xMap.transform(qMin(xMap.s1(), xMap.s2())); x_minus_is_finite = false;
             }*/
-
-            // draw caps
-            if (plus)
-                QwtPainter::drawLine(painter, x_plus, yi - cap / 2, x_plus, yi + cap / 2);
-            if (minus && x_minus_is_finite)
-                QwtPainter::drawLine(painter, x_minus, yi - cap / 2, x_minus, yi + cap / 2);
-
-            // draw vertical line
-            if (through) {
-                if (plus)
-                    QwtPainter::drawLine(painter, xi, yi, x_plus, yi);
-                else if (minus)
-                    QwtPainter::drawLine(painter, x_minus, yi, xi, yi);
-            } else if (x_plus >= x_minus) {
-                if (plus && x_plus > xi + sh / 2)
-                    QwtPainter::drawLine(painter, xi + sh / 2, yi, x_plus, yi);
-                if (minus && x_minus < xi - sh / 2)
-                    QwtPainter::drawLine(painter, xi - sh / 2, yi, x_minus, yi);
-            } else { // inverted scale
-                if (plus && x_plus < xi - sh / 2)
-                    QwtPainter::drawLine(painter, xi - sh / 2, yi, x_plus, yi);
-                if (minus && x_minus > xi + sh / 2)
-                    QwtPainter::drawLine(painter, xi + sh / 2, yi, x_minus, yi);
-            }
         }
     }
 }
