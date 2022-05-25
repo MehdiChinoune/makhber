@@ -422,6 +422,12 @@ if( MAKHBER_SCRIPTING_MUPARSER )
   target_compile_definitions( libmakhber PUBLIC SCRIPTING_MUPARSER )
 endif()
 
+if( MAKHBER_ENABLE_CPPCHECK )
+  set_target_properties( libmakhber PROPERTIES
+    CXX_CPPCHECK "${MAKHBER_CXX_CPPCHECK}"
+  )
+endif()
+
 if( MAKHBER_SCRIPTING_PYTHON )
 
   target_link_libraries( libmakhber Python3::Python )

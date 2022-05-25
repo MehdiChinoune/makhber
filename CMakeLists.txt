@@ -78,6 +78,14 @@ if( CMAKE_CXX_LINK_PIE_SUPPORTED )
   set( CMAKE_POSITION_INDEPENDENT_CODE TRUE )
 endif()
 
+option( MAKHBER_ENABLE_CPPCHECK "Analyze code with cppcheck" OFF )
+
+if( MAKHBER_ENABLE_CPPCHECK )
+  find_program( CPPCHEK_PROGRAM cppcheck REQUIRED )
+  set( MAKHBER_CXX_CPPCHECK "${CPPCHEK_PROGRAM}" "--library=qt" "--enable=style" "--suppress=useStlAlgorithm" "--suppress=*:*/3rdparty/*" )
+  message( "MAKHBER_CXX_CPPCHECK: ${MAKHBER_CXX_CPPCHECK}" )
+endif()
+
 set( CMAKE_INSTALL_DEFAULT_COMPONENT_NAME Makhber )
 set( CPACK_COMPONENT_MAKHBER_REQUIRED TRUE )
 

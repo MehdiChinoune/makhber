@@ -12,6 +12,12 @@ add_executable( makhber
 
 target_link_libraries( makhber libmakhber )
 
+if( MAKHBER_ENABLE_CPPCHECK )
+  set_target_properties( makhber PROPERTIES
+    CXX_CPPCHECK "${MAKHBER_CXX_CPPCHECK}"
+  )
+endif()
+
 if( MAKHBER_BUILD_TRANSLATIONS )
   file( GLOB TS_FILES "${CMAKE_SOURCE_DIR}/translations/*.ts" )
   if( QT_VERSION_MAJOR VERSION_GREATER_EQUAL 6 )
