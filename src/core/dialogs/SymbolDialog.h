@@ -63,7 +63,7 @@ public:
      * \param parent parent widget
      * \param fl window flags
      */
-    SymbolDialog(CharSet charSet, QWidget *parent = 0, Qt::WindowFlags fl = Qt::Widget);
+    explicit SymbolDialog(CharSet charSet, QWidget *parent = 0, Qt::WindowFlags fl = Qt::Widget);
     //! Destructor
     ~SymbolDialog();
 
