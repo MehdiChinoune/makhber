@@ -231,15 +231,12 @@ jobs:
         with:
           submodules: true
 
-      - name: Install snapcraft
-        run: |
-          sudo snap install snapcraft --classic
-
-      - name: Building & Packaging
+      - uses: snapcore/action-build@v1
         id: snap_build
+
+      - name: Installing
         run: |
-          sudo snapcraft --debug --destructive-mode
-          echo "snap=$(echo $(ls *.snap))" >> $GITHUB_OUTPUT
+          sudo snap install --dangerous ${{ steps.snap_build.outputs.snap }}
 
       - name: Upload Snap
         uses: softprops/action-gh-release@v2
@@ -262,6 +259,7 @@ jobs:
 
       - name: Show contents
         run: |
+          snap info makhber
           tree /snap/makhber/current/usr
 
   Flatpak:
