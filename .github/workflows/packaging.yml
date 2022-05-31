@@ -233,6 +233,8 @@ jobs:
 
       - uses: snapcore/action-build@v1
         id: snap_build
+        with:
+          snapcraft-channel: candidate
 
       - name: Installing
         run: |
