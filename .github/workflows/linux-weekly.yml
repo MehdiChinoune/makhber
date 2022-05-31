@@ -23,7 +23,7 @@ jobs:
 
       - name: Install snapcraft
         run: |
-          sudo snap install snapcraft --classic
+          sudo snap install --candidate snapcraft --classic
 
       - name: Building & Packaging
         run: |
