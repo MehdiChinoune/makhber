@@ -91,7 +91,7 @@ protected:
 
 public Q_SLOTS:
     //! Change language (reset title)
-    virtual void languageChange();
+    void languageChange();
     //! Find and emit char from pressed button
     void getChar(int btnIndex);
     //! Find and emit char from current button ([return] pressed)

@@ -7576,7 +7576,7 @@ void ApplicationWindow::showGraphContextMenu()
     if (w->inherits("MultiLayer")) {
         auto *plot = dynamic_cast<MultiLayer *>(w);
         QMenu cm(this);
-        QMenu *calcul = cm.addMenu(tr("Anal&yze"));
+        calcul = cm.addMenu(tr("Anal&yze"));
 
         auto *ag = dynamic_cast<Graph *>(plot->activeGraph());
         if (ag->isPiePlot())
@@ -7598,12 +7598,12 @@ void ApplicationWindow::showGraphContextMenu()
             calcul->addAction(actionShowIntDialog);
             calcul->addSeparator();
 
-            QMenu *smooth = calcul->addMenu(tr("&Smooth"));
+            smooth = calcul->addMenu(tr("&Smooth"));
             smooth->addAction(actionSmoothSavGol);
             smooth->addAction(actionSmoothFFT);
             smooth->addAction(actionSmoothAverage);
 
-            QMenu *filter = calcul->addMenu(tr("&FFT Filter"));
+            filter = calcul->addMenu(tr("&FFT Filter"));
             filter->addAction(actionLowPassFilter);
             filter->addAction(actionHighPassFilter);
             filter->addAction(actionBandPassFilter);
@@ -7617,7 +7617,7 @@ void ApplicationWindow::showGraphContextMenu()
             calcul->addAction(actionShowFitPolynomDialog);
             calcul->addSeparator();
 
-            QMenu *decay = calcul->addMenu(tr("Fit E&xponential Decay"));
+            decay = calcul->addMenu(tr("Fit E&xponential Decay"));
             decay->addAction(actionShowExpDecayDialog);
             decay->addAction(actionShowTwoExpDecayDialog);
             decay->addAction(actionShowExpDecay3Dialog);
@@ -7627,7 +7627,7 @@ void ApplicationWindow::showGraphContextMenu()
             calcul->addAction(actionFitGauss);
             calcul->addAction(actionFitLorentz);
 
-            QMenu *multiPeakMenu = calcul->addMenu(tr("Fit &Multi-Peak"));
+            multiPeakMenu = calcul->addMenu(tr("Fit &Multi-Peak"));
             multiPeakMenu->addAction(actionMultiPeakGauss);
             multiPeakMenu->addAction(actionMultiPeakLorentz);
 
@@ -7702,7 +7702,7 @@ void ApplicationWindow::showLayerButtonContextMenu()
             cm.addAction(actionShowCurvesDialog);
             cm.addAction(actionAddFunctionCurve);
 
-            QMenu *calcul = cm.addMenu(tr("Anal&yze"));
+            calcul = cm.addMenu(tr("Anal&yze"));
 
             QMenu *translate = calcul->addMenu(tr("&Translate"));
             translate->addAction(actionTranslateVert);
@@ -7713,12 +7713,12 @@ void ApplicationWindow::showLayerButtonContextMenu()
             calcul->addAction(actionShowIntDialog);
             calcul->addSeparator();
 
-            QMenu *smooth = calcul->addMenu(tr("&Smooth"));
+            smooth = calcul->addMenu(tr("&Smooth"));
             smooth->addAction(actionSmoothSavGol);
             smooth->addAction(actionSmoothFFT);
             smooth->addAction(actionSmoothAverage);
 
-            QMenu *filter = calcul->addMenu(tr("&FFT Filter"));
+            filter = calcul->addMenu(tr("&FFT Filter"));
             filter->addAction(actionLowPassFilter);
             filter->addAction(actionHighPassFilter);
             filter->addAction(actionBandPassFilter);
@@ -7732,7 +7732,7 @@ void ApplicationWindow::showLayerButtonContextMenu()
             calcul->addAction(actionShowFitPolynomDialog);
             calcul->addSeparator();
 
-            QMenu *decay = calcul->addMenu(tr("Fit E&xponential Decay"));
+            decay = calcul->addMenu(tr("Fit E&xponential Decay"));
             decay->addAction(actionShowExpDecayDialog);
             decay->addAction(actionShowTwoExpDecayDialog);
             decay->addAction(actionShowExpDecay3Dialog);
@@ -7742,7 +7742,7 @@ void ApplicationWindow::showLayerButtonContextMenu()
             calcul->addAction(actionFitGauss);
             calcul->addAction(actionFitLorentz);
 
-            QMenu *multiPeakMenu = calcul->addMenu(tr("Fit &Multi-Peak"));
+            multiPeakMenu = calcul->addMenu(tr("Fit &Multi-Peak"));
             multiPeakMenu->addAction(actionMultiPeakGauss);
             multiPeakMenu->addAction(actionMultiPeakLorentz);
 
@@ -7827,7 +7827,7 @@ void ApplicationWindow::showWindowContextMenu()
     } else if (w->inherits("Graph3D")) {
         auto *g = dynamic_cast<Graph3D *>(w);
         if (!g->hasData()) {
-            QMenu *plot3D = cm.addMenu(tr("3D &Plot"));
+            plot3D = cm.addMenu(tr("3D &Plot"));
             plot3D->addAction(actionAdd3DData);
             plot3D->addAction(tr("&Matrix..."), this, SLOT(add3DMatrixPlot()));
             plot3D->addAction(actionEditSurfacePlot);

@@ -60,7 +60,7 @@ public:
     explicit ConfigDialog(QWidget *parent, Qt::WindowFlags fl = Qt::Widget);
 
 public Q_SLOTS:
-    virtual void languageChange();
+    void languageChange();
     void insertLanguagesList();
 
     void accept();
