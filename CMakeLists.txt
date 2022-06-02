@@ -45,13 +45,11 @@ endif()
 include( CheckCXXCompilerFlag )
 
 if( MSVC )
-  # /wd4456 /wd4457 /wd4458 Silent "declaration of %1 hides %2 ..."
   # /wd4251 Silent dll-related warnings
   # /wd4127 Silent conditional expression is constant (Qt headers)
   # /wd4310 Silent cast truncates constant value (muParser headers)
-  # /wd4996 strcpy is unsafe warnings, equiv to #define _SCL_SECURE_NO_WARNINGS
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /W4 /permissive- \
-	 /wd4456 /wd4457 /wd4458 /wd4251 /wd4127 /wd4310 /wd4996" )
+	 /wd4251 /wd4127 /wd4310" )
   set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4 /permissive-" )
   if( CMAKE_CXX_COMPILER_ID STREQUAL "Clang" )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nonportable-include-path" )
