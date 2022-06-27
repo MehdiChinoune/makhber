@@ -109,9 +109,33 @@ jobs:
       - name: Install PyQt
         run: |
           if [[ "${{ matrix.QT_VER }}" == "5.15.2" ]]; then
-            pip3 install pyqt5
+            export PYQT="PyQt5" PYQT_PYPI="PyQt5" PYQT_VERSION="5.15.11"
           else
-            pip3 install pyqt6
+            export PYQT="PyQt6" PYQT_PYPI="pyqt6" PYQT_VERSION="6.10.2"
+          fi
+          pip3 install $PYQT-sip
+          wget https://pypi.python.org/packages/source/P/$PYQT/$PYQT_PYPI-$PYQT_VERSION.tar.gz
+          tar -xzf $PYQT_PYPI-$PYQT_VERSION.tar.gz ; cd $PYQT_PYPI-$PYQT_VERSION
+          if [[ "${{ matrix.QT_VER }}" == "5.15.2" ]]; then
+            sip-install --verbose --confirm-license --build-dir ./build \
+              --no-designer-plugin --no-qml-plugin --no-tools \
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp \
+              --disable QtLocation --disable QtMultimedia --disable QtMultimediaWidgets \
+              --disable QtNfc --disable QtPositioning --disable QtQml --disable QtQuick \
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors \
+              --disable QtSerialPort --disable QtSql --disable QtTest --disable QtTextToSpeech \
+              --disable QtWebChannel --disable QtWebKit --disable QtWebKitWidgets \
+              --disable QtWebSockets --disable QtX11Extras --disable QtXml --disable QtXmlPatterns
+          else
+            sip-install --verbose --confirm-license --build-dir ./build \
+              --no-designer-plugin --no-qml-plugin --no-tools \
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp \
+              --disable QtMultimedia --disable QtMultimediaWidgets --disable QtNfc \
+              --disable QtPositioning --disable QtQml --disable QtQuick --disable QtQuick3D \
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors \
+              --disable QtSerialPort --disable QtSql --disable QtSvgWidgets --disable QtTest \
+              --disable QtWebChannel --disable QtWebSockets --disable QtXml \
+              --disable QtPdf --disable QtPdfWidgets --disable QtTextToSpeech --disable QAxContainer
           fi
 
       - name: Restore/Cache Build Directory
@@ -202,8 +226,8 @@ jobs:
       - name: Build and install Qwt
         if: steps.cache-qwt.outputs.cache-hit != 'true'
         run: |
-          choco install wget jom --no-progress
-          wget https://downloads.sourceforge.net/qwt/qwt-${{ env.QWT_VER }}.zip
+          choco install jom --no-progress
+          Invoke-WebRequest -Uri https://downloads.sourceforge.net/qwt/qwt-${{ env.QWT_VER }}.zip -outFile qwt-${{ env.QWT_VER }}.zip
           Expand-Archive qwt-${{ env.QWT_VER }}.zip -DestinationPath .; cd qwt-${{ env.QWT_VER }}
           ((Get-Content -path qwtconfig.pri -Raw) `
             -replace 'C:/Qwt-\$\$QWT_VERSION',"$Env:GITHUB_WORKSPACE/Qwt" `
@@ -234,9 +258,37 @@ jobs:
       - name: Install PyQt
         run: |
           if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
-            pip install pyqt5
+            $Env:PYQT = "PyQt5"
+            $Env:PYQT_PYPI = "PyQt5"
+            $Env:PYQT_VERSION = "5.15.11"
           } else {
-            pip install pyqt6
+            $Env:PYQT = "PyQt6"
+            $Env:PYQT_PYPI = "pyqt6"
+            $Env:PYQT_VERSION = "6.10.2"
+          }
+          pip install $Env:PYQT-sip
+          Invoke-WebRequest -Uri https://pypi.python.org/packages/source/P/$Env:PYQT/$Env:PYQT_PYPI-$Env:PYQT_VERSION.tar.gz -outFile $Env:PYQT_PYPI-$Env:PYQT_VERSION.tar.gz
+          7z e .\$Env:PYQT_PYPI-$Env:PYQT_VERSION.tar.gz ;7z x .\$Env:PYQT-$Env:PYQT_VERSION.tar ; cd $Env:PYQT_PYPI-$Env:PYQT_VERSION
+          if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
+            sip-install --verbose --confirm-license --build-dir ./build `
+              --no-designer-plugin --no-qml-plugin --no-tools `
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp `
+              --disable QtLocation --disable QtMultimedia --disable QtMultimediaWidgets `
+              --disable QtNfc --disable QtPositioning --disable QtQml --disable QtQuick `
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors `
+              --disable QtSerialPort --disable QtSql --disable QtTest --disable QtTextToSpeech `
+              --disable QtWebChannel --disable QtWebKit --disable QtWebKitWidgets `
+              --disable QtWebSockets --disable QtX11Extras --disable QtXml --disable QtXmlPatterns
+          } else {
+            sip-install --verbose --confirm-license --build-dir ./build `
+              --no-designer-plugin --no-qml-plugin --no-tools `
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp `
+              --disable QtMultimedia --disable QtMultimediaWidgets --disable QtNfc `
+              --disable QtPositioning --disable QtQml --disable QtQuick --disable QtQuick3D `
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors `
+              --disable QtSerialPort --disable QtSql --disable QtSvgWidgets --disable QtTest `
+              --disable QtWebChannel --disable QtWebSockets --disable QtXml `
+              --disable QtPdf --disable QtPdfWidgets --disable QtTextToSpeech --disable QAxContainer
           }
 
       - name: Configuring
