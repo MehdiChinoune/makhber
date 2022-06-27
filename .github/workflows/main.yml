@@ -98,11 +98,37 @@ jobs:
 
       - name: Install Python packages
         run: |
-          pip3 install sip pyqt-builder numpy
+          pip3 install sip pyqt-builder
           if [[ "${{ matrix.QT_VER }}" == "5.15.2" ]]; then
-            pip3 install pyqt5
+            export PYQT="PyQt5"
+            export PYQT_VERSION="5.15.10"
           else
-            pip3 install pyqt6
+            export PYQT="PyQt6"
+            export PYQT_VERSION="6.7.0"
+          fi
+          pip3 install $PYQT-sip
+          wget https://pypi.python.org/packages/source/P/$PYQT/$PYQT-$PYQT_VERSION.tar.gz
+          tar -xzf $PYQT-$PYQT_VERSION.tar.gz ; cd $PYQT-$PYQT_VERSION
+          if [[ "${{ matrix.QT_VER }}" == "6.7.1" ]]; then
+            sip-install --verbose --confirm-license --build-dir ./build \
+              --no-designer-plugin --no-qml-plugin --no-tools \
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp \
+              --disable QtMultimedia --disable QtMultimediaWidgets --disable QtNfc \
+              --disable QtPositioning --disable QtQml --disable QtQuick --disable QtQuick3D \
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors \
+              --disable QtSerialPort --disable QtSql --disable QtSvgWidgets --disable QtTest \
+              --disable QtWebChannel --disable QtWebSockets --disable QtXml \
+              --disable QtPdf --disable QtPdfWidgets --disable QtTextToSpeech --disable QAxContainer
+          else
+            sip-install --verbose --confirm-license --build-dir ./build \
+              --no-designer-plugin --no-qml-plugin --no-tools \
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp \
+              --disable QtLocation --disable QtMultimedia --disable QtMultimediaWidgets \
+              --disable QtNfc --disable QtPositioning --disable QtQml --disable QtQuick \
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors \
+              --disable QtSerialPort --disable QtSql --disable QtTest --disable QtTextToSpeech \
+              --disable QtWebChannel --disable QtWebKit --disable QtWebKitWidgets \
+              --disable QtWebSockets --disable QtX11Extras --disable QtXml --disable QtXmlPatterns
           fi
 
       - name: Configuring
@@ -205,11 +231,37 @@ jobs:
 
       - name: Install Python packages
         run: |
-          pip install sip pyqt-builder numpy
+          pip install sip pyqt-builder
           if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
-            pip install pyqt5
+            $Env:PYQT = "PyQt5"
+            $Env:PYQT_VERSION = "5.15.10"
           } else {
-            pip install pyqt6
+            $Env:PYQT = "PyQt6"
+            $Env:PYQT_VERSION = "6.7.0"
+          }
+          pip install $Env:PYQT-sip
+          wget https://pypi.python.org/packages/source/P/$Env:PYQT/$Env:PYQT-$Env:PYQT_VERSION.tar.gz
+          7z e .\$Env:PYQT-$Env:PYQT_VERSION.tar.gz ;7z x .\$Env:PYQT-$Env:PYQT_VERSION.tar ; cd $Env:PYQT-$Env:PYQT_VERSION
+          if ("${{ matrix.QT_VER }}" -eq "6.7.1") {
+            sip-install --verbose --confirm-license --build-dir ./build `
+              --no-designer-plugin --no-qml-plugin --no-tools `
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp `
+              --disable QtMultimedia --disable QtMultimediaWidgets --disable QtNfc `
+              --disable QtPositioning --disable QtQml --disable QtQuick --disable QtQuick3D `
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors `
+              --disable QtSerialPort --disable QtSql --disable QtSvgWidgets --disable QtTest `
+              --disable QtWebChannel --disable QtWebSockets --disable QtXml `
+              --disable QtPdf --disable QtPdfWidgets --disable QtTextToSpeech --disable QAxContainer
+          } else {
+            sip-install --verbose --confirm-license --build-dir ./build `
+              --no-designer-plugin --no-qml-plugin --no-tools `
+              --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp `
+              --disable QtLocation --disable QtMultimedia --disable QtMultimediaWidgets `
+              --disable QtNfc --disable QtPositioning --disable QtQml --disable QtQuick `
+              --disable QtQuickWidgets --disable QtRemoteObjects --disable QtSensors `
+              --disable QtSerialPort --disable QtSql --disable QtTest --disable QtTextToSpeech `
+              --disable QtWebChannel --disable QtWebKit --disable QtWebKitWidgets `
+              --disable QtWebSockets --disable QtX11Extras --disable QtXml --disable QtXmlPatterns
           }
 
       - name: Configuring
