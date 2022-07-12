@@ -26,7 +26,9 @@ if( MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU" )
   set( IPO_SUPPORTED OFF )
 endif()
 
+include( FeatureSummary )
 option( MAKHBER_ENABLE_LTO "Enable LTO" ${IPO_SUPPORTED} )
+add_feature_info(LTO MAKHBER_ENABLE_LTO "Enable LTO(Link Time Optimization)/IPO(Inter-Procedural Optimization)")
 
 if(MAKHBER_ENABLE_LTO AND NOT MSVC AND NOT APPLE)
   set(BUILD_SHARED_LIBS ON)
@@ -81,20 +83,28 @@ set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH} )
 include( GNUInstallDirs )
 
 option( MAKHBER_SEARCH_FOR_UPDATES "Enable Searching for updates" ON )
+add_feature_info( SEARCH_FOR_UPDATES MAKHBER_SEARCH_FOR_UPDATES "Enable Searching for updates" )
 
 option( MAKHBER_DOWNLOAD_LINKS "Enable Download links" OFF )
+add_feature_info( DOWNLOAD_LINKS MAKHBER_DOWNLOAD_LINKS "Enable Download links" )
 
 option( MAKHBER_SCRIPTING_MUPARSER "Enable muParser Scripting" ON )
+add_feature_info( SCRIPTING_MUPARSER MAKHBER_SCRIPTING_MUPARSER "Enable muParser Scripting" )
 
 option( MAKHBER_ORIGIN_IMPORT "Enable importing OriginLab project files" ON )
+add_feature_info( ORIGIN_IMPORT MAKHBER_ORIGIN_IMPORT "Enable importing OriginLab project files" )
 
 option( MAKHBER_SCRIPTING_PYTHON "Enable Python Scripting" OFF )
+add_feature_info( SCRIPTING_PYTHON MAKHBER_SCRIPTING_PYTHON "Enable Python Scripting" )
 
 option( MAKHBER_BUILD_TRANSLATIONS "Build Translations" ON )
+add_feature_info( BUILD_TRANSLATIONS MAKHBER_BUILD_TRANSLATIONS "Build Translations" )
 
 option( MAKHBER_BUILD_TESTS "Build tests" OFF )
+add_feature_info( BUILD_TESTS MAKHBER_BUILD_TESTS "Build tests" )
 
 option( MAKHBER_FORCE_QT5 "Force to build with Qt5" OFF )
+add_feature_info( FORCE_QT5 MAKHBER_FORCE_QT5 "Force to build with Qt5" )
 
 if( NOT MAKHBER_FORCE_QT5 )
   find_package( Qt6 6.2 COMPONENTS Core QUIET )
@@ -156,6 +166,7 @@ if( MAKHBER_SCRIPTING_PYTHON )
   else()
     option( MAKHBER_BUNDLE_PYQT "Bundle PyQt Python module" OFF )
   endif()
+  add_feature_info( BUNDLE_PYQT MAKHBER_BUNDLE_PYQT "Bundle PyQt Python module" )
 
   if( MINGW )
     set( Python3_FIND_REGISTRY LAST )
@@ -227,6 +238,7 @@ endif()
 # Documentation
 # Developer Documentation
 option( MAKHBER_BUILD_CODE_DOCS "Build Code documentation" OFF )
+add_feature_info( BUILD_CODE_DOCS MAKHBER_BUILD_CODE_DOCS "Build Code documentation" )
 
 if( MAKHBER_BUILD_CODE_DOCS )
   find_package( Doxygen )
@@ -364,3 +376,5 @@ list( JOIN MAKHBER_EXTRA_RPM_DEPS ", " CPACK_RPM_PACKAGE_REQUIRES )
 set( CPACK_DMG_FILESYSTEM "APFS" )
 
 include(CPack)
+
+feature_summary(INCLUDE_QUIET_PACKAGES  WHAT PACKAGES_FOUND PACKAGES_NOT_FOUND ENABLED_FEATURES DISABLED_FEATURES)
