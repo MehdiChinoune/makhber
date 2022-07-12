@@ -1782,7 +1782,7 @@ int Table::colX(int col)
             return i;
     }
     int cols = columnCount();
-    for (int i = col + 1; i < cols; i++) {
+    for (int i = col; i < cols; i++) {
         if (column(i)->plotDesignation() == Makhber::X)
             return i;
     }
@@ -1793,8 +1793,9 @@ int Table::colY(int col)
 {
     int cols = columnCount();
 
-    if (column(col)->plotDesignation() == Makhber::xErr
-        || column(col)->plotDesignation() == Makhber::yErr) {
+    if (col < cols
+        && (column(col)->plotDesignation() == Makhber::xErr
+            || column(col)->plotDesignation() == Makhber::yErr)) {
         // look to the left first
         for (int i = col - 1; i >= 0; i--) {
             if (column(i)->plotDesignation() == Makhber::Y)
@@ -1806,7 +1807,7 @@ int Table::colY(int col)
         }
     } else {
         // look to the right first
-        for (int i = col + 1; i < cols; i++) {
+        for (int i = col; i < cols; i++) {
             if (column(i)->plotDesignation() == Makhber::Y)
                 return i;
         }

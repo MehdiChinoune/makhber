@@ -12604,42 +12604,42 @@ Try to copy the &apos;makhberrc.py&apos; to the current PYTHONPATH, HOME or work
 <context>
     <name>Table</name>
     <message>
-        <location filename="../src/table/Table.cpp" line="930"/>
+        <location filename="../src/table/Table.cpp" line="936"/>
         <source>ASCII Export Error</source>
         <translation>ASCII-Export-Fehler</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="931"/>
+        <location filename="../src/table/Table.cpp" line="937"/>
         <source>Could not write to file: &lt;br&gt;&lt;h4&gt;</source>
         <translation>Konnte nicht in Datei schreiben: &lt;br&gt;&lt;h4&gt;</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="932"/>
+        <location filename="../src/table/Table.cpp" line="938"/>
         <source>&lt;/h4&gt;&lt;p&gt;Please verify that you have the right to write to this location!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1032"/>
+        <location filename="../src/table/Table.cpp" line="1038"/>
         <source>Makhber</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1033"/>
+        <location filename="../src/table/Table.cpp" line="1039"/>
         <source>Do you want to hide or delete</source>
         <translation>Wollen Sie ausblenden oder löschen</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1037"/>
+        <location filename="../src/table/Table.cpp" line="1043"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1036"/>
+        <location filename="../src/table/Table.cpp" line="1042"/>
         <source>Hide</source>
         <translation>Ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1228"/>
+        <location filename="../src/table/Table.cpp" line="1234"/>
         <source>%1: apply formula to column</source>
         <translation>%1: Formel auf Spalte angewendet</translation>
     </message>
@@ -13945,37 +13945,37 @@ doppelter Präzision
         <translation>%1: Spalte %2 von %3 nach %4 verschoben</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="1876"/>
+        <location filename="../src/table/future_Table.cpp" line="1877"/>
         <source>%1: sort column(s)</source>
         <translation>%1: Spalte(n) sortiert</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2229"/>
+        <location filename="../src/table/future_Table.cpp" line="2230"/>
         <source>Column %1</source>
         <translation>Spalte %1</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2257"/>
+        <location filename="../src/table/future_Table.cpp" line="2258"/>
         <source>Hide Comments</source>
         <translation>Verstecke Kommentare</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2259"/>
+        <location filename="../src/table/future_Table.cpp" line="2260"/>
         <source>Show Comments</source>
         <translation>Zeige Kommentare</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2263"/>
+        <location filename="../src/table/future_Table.cpp" line="2264"/>
         <source>Hide Controls</source>
         <translation>Verstecke Kontrollreiter</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2265"/>
+        <location filename="../src/table/future_Table.cpp" line="2266"/>
         <source>Show Controls</source>
         <translation>Zeige Kontrollreiter</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2295"/>
+        <location filename="../src/table/future_Table.cpp" line="2296"/>
         <source>Table</source>
         <translation>Tabelle</translation>
     </message>

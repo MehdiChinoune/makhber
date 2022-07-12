@@ -827,7 +827,7 @@ int Table::columnCount()
 double Table::cell(int row, int col)
 {
     Column *colPtr = column(col);
-    if (!colPtr)
+    if (!colPtr || row >= numRows())
         return 0.0;
     if (!colPtr->isInvalid(row)) {
         if (colPtr->columnMode() == Makhber::ColumnMode::Text) {
@@ -845,19 +845,25 @@ double Table::cell(int row, int col)
 
 void Table::setCell(int row, int col, double val)
 {
+    Column *colPtr = column(col);
+    if (!colPtr || row >= numRows())
+        return;
     column(col)->setValueAt(row, val);
 }
 
 QString Table::text(int row, int col)
 {
     Column *colPtr = column(col);
-    if (!colPtr)
+    if (!colPtr || row >= numRows())
         return QString();
     return colPtr->asStringColumn()->textAt(row);
 }
 
 void Table::setText(int row, int col, const QString &text)
 {
+    Column *colPtr = column(col);
+    if (!colPtr || row >= numRows())
+        return;
     column(col)->asStringColumn()->setTextAt(row, text);
 }
 

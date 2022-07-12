@@ -12610,42 +12610,42 @@ Try to copy the &apos;makhberrc.py&apos; to the current PYTHONPATH, HOME or work
 <context>
     <name>Table</name>
     <message>
-        <location filename="../src/table/Table.cpp" line="930"/>
+        <location filename="../src/table/Table.cpp" line="936"/>
         <source>ASCII Export Error</source>
         <translation>Chyba při vyvedení do ASCII</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="931"/>
+        <location filename="../src/table/Table.cpp" line="937"/>
         <source>Could not write to file: &lt;br&gt;&lt;h4&gt;</source>
         <translation>Nelze zapisovat do souboru: &lt;br&gt;&lt;h4&gt;</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="932"/>
+        <location filename="../src/table/Table.cpp" line="938"/>
         <source>&lt;/h4&gt;&lt;p&gt;Please verify that you have the right to write to this location!</source>
         <translation>&lt;/h4&gt;&lt;p&gt;Ověřte, prosím, že máte oprávnění pro zápis do tohoto umístění!</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1033"/>
+        <location filename="../src/table/Table.cpp" line="1039"/>
         <source>Do you want to hide or delete</source>
         <translation>Chcete skrýt nebo smazat</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1037"/>
+        <location filename="../src/table/Table.cpp" line="1043"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1036"/>
+        <location filename="../src/table/Table.cpp" line="1042"/>
         <source>Hide</source>
         <translation>Skrýt</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1228"/>
+        <location filename="../src/table/Table.cpp" line="1234"/>
         <source>%1: apply formula to column</source>
         <translation>%1: vzorec použit na sloupec</translation>
     </message>
     <message>
-        <location filename="../src/table/Table.cpp" line="1032"/>
+        <location filename="../src/table/Table.cpp" line="1038"/>
         <source>Makhber</source>
         <translation type="unfinished"></translation>
     </message>
@@ -13951,37 +13951,37 @@ dvojnásobná přesnost
         <translation>%1: přesunut sloupec %2 z %3 do %4 verschoben</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="1876"/>
+        <location filename="../src/table/future_Table.cpp" line="1877"/>
         <source>%1: sort column(s)</source>
         <translation>%1: sloupec(e) seřazen</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2229"/>
+        <location filename="../src/table/future_Table.cpp" line="2230"/>
         <source>Column %1</source>
         <translation>Sloupec %1</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2257"/>
+        <location filename="../src/table/future_Table.cpp" line="2258"/>
         <source>Hide Comments</source>
         <translation>Skrýt poznámky</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2259"/>
+        <location filename="../src/table/future_Table.cpp" line="2260"/>
         <source>Show Comments</source>
         <translation>Ukázat poznámky</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2263"/>
+        <location filename="../src/table/future_Table.cpp" line="2264"/>
         <source>Hide Controls</source>
         <translation>Skrýt ovládání</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2265"/>
+        <location filename="../src/table/future_Table.cpp" line="2266"/>
         <source>Show Controls</source>
         <translation>Ukázat ovládání</translation>
     </message>
     <message>
-        <location filename="../src/table/future_Table.cpp" line="2295"/>
+        <location filename="../src/table/future_Table.cpp" line="2296"/>
         <source>Table</source>
         <translation>Tabulka</translation>
     </message>
