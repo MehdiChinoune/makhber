@@ -326,4 +326,10 @@ TEST_F(ApplicationWindowTest, Table)
     int windows = currentFolder()->windowCount();
     currentFolder()->removeWindow(table3);
     EXPECT_EQ(windows - 1, currentFolder()->windowCount());
+    /*
+    Table::verticalHeaderWidth()
+    addFunction
+    addReference
+    ui.formula_box
+    */
 }
