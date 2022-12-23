@@ -96,6 +96,8 @@ option( MAKHBER_BUILD_TESTS "Build tests" OFF )
 
 option( MAKHBER_FORCE_QT5 "Force to build with Qt5" OFF )
 
+option( MAKHBER_USE_QT_CMAKE_DEPLOY_API "Use Qt's CMake deployment API" OFF )
+
 if( NOT MAKHBER_FORCE_QT5 )
   find_package( Qt6 6.2 COMPONENTS Core QUIET )
 endif()

@@ -68,16 +68,30 @@ if( APPLE )
   install( FILES icons/makhber.icns DESTINATION makhber.app/Contents/Resources )
 endif()
 
-set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CMAKE_INSTALL_BINDIR} )
-include(DeployQt)
-if( MSVC )
-  windeployqt( makhber ${CMAKE_INSTALL_BINDIR} )
-elseif( APPLE )
-  install( CODE "
-    execute_process(
-      COMMAND ${MACDEPLOYQT_EXECUTABLE} \${CMAKE_INSTALL_PREFIX}/makhber.app -always-overwrite
-    )"
+if( ${Qt${QT_VERSION_MAJOR}Core_VERSION} VERSION_LESS 6.3 )
+  set( MAKHBER_USE_QT_CMAKE_DEPLOY_API OFF CACHE BOOL "Use Qt's CMake deployment API" FORCE )
+endif()
+
+if( MAKHBER_USE_QT_CMAKE_DEPLOY_API )
+  qt_standard_project_setup()
+  qt_generate_deploy_app_script(
+    TARGET makhber
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
   )
+  install(SCRIPT ${deploy_script})
+else()
+  set( CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${CMAKE_INSTALL_BINDIR} )
+  include(DeployQt)
+  if( MSVC )
+    windeployqt( makhber ${CMAKE_INSTALL_BINDIR} )
+  elseif( APPLE )
+    install( CODE "
+      execute_process(
+        COMMAND ${MACDEPLOYQT_EXECUTABLE} \${CMAKE_INSTALL_PREFIX}/makhber.app -always-overwrite
+      )"
+    )
+  endif()
 endif()
 
 if( WIN32 AND RUNTIME_DIRS )
