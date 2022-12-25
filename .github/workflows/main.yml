@@ -123,10 +123,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        QT_VER: [5.15.2, 6.6.2]
+        QT_VER: [5.15, 6.6.2]
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
-      VCPKG_DEFAULT_TRIPLET: x64-windows
+      VCPKG_DEFAULT_TRIPLET: 'x64-windows'
       QWT_VER: 6.2.0
 
     steps:
@@ -140,12 +140,14 @@ jobs:
 
       - name: Restore cached Qt
         id: cache-qt
+        if: ${{ matrix.QT_VER == '6.6.2' }}
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.QT_VER }}-Cache
 
       - name: Install Qt
+        if: ${{ matrix.QT_VER == '6.6.2' }}
         uses: jurplel/install-qt-action@v3
         with:
           version: ${{ matrix.QT_VER }}
@@ -155,6 +157,7 @@ jobs:
           aqtversion: '==3.1.*'
 
       - name: Restore cached Qwt
+        if: ${{ matrix.QT_VER == '6.6.2' }}
         id: cache-qwt
         uses: actions/cache@v4
         with:
@@ -162,9 +165,9 @@ jobs:
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.QT_VER }}
 
       - uses: ilammy/msvc-dev-cmd@v1
-        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-qwt.outputs.cache-hit != 'true' && matrix.QT_VER == '6.6.2' }}
       - name: Build and install Qwt
-        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-qwt.outputs.cache-hit != 'true' && matrix.QT_VER == '6.6.2' }}
         run: |
           choco install wget jom
           wget https://downloads.sourceforge.net/qwt/qwt-${{ env.QWT_VER }}.zip
@@ -192,6 +195,9 @@ jobs:
           cd $Env:VCPKG_INSTALLATION_ROOT
           git pull origin master
           vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
+          if ("${{ matrix.QT_VER }}" -eq "5.15"){
+            vcpkg install qwt
+          }
 
       - uses: actions/setup-python@v5
         with:
