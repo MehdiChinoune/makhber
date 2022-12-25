@@ -146,7 +146,7 @@ jobs:
       matrix:
         include:
           - os_ver: "2025"
-            QT_VER: "5.15.2"
+            QT_VER: "5.15"
             triplet: x64-windows
           - os_ver: "2025"
             QT_VER: "6.10.2"
@@ -176,12 +176,14 @@ jobs:
 
       - name: Restore cached Qt
         id: cache-qt
+        if: ${{ matrix.QT_VER != '5.15' }}
         uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-Cache
 
       - name: Install Qt
+        if: ${{ matrix.QT_VER != '5.15' }}
         uses: jurplel/install-qt-action@v4
         with:
           setup-python: false
@@ -191,6 +193,7 @@ jobs:
           archives: qtbase qtsvg qttools qttranslations
 
       - name: Restore cached Qwt
+        if: ${{ matrix.QT_VER != '5.15' }}
         id: cache-qwt
         uses: actions/cache@v5
         with:
@@ -198,9 +201,9 @@ jobs:
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}
 
       - uses: ilammy/msvc-dev-cmd@v1
-        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-qwt.outputs.cache-hit != 'true' && matrix.QT_VER != '5.15' }}
       - name: Build and install Qwt
-        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        if: ${{ steps.cache-qwt.outputs.cache-hit != 'true' && matrix.QT_VER != '5.15' }}
         run: |
           choco install wget jom --no-progress
           wget https://downloads.sourceforge.net/qwt/qwt-${{ env.QWT_VER }}.zip
@@ -230,10 +233,13 @@ jobs:
           git pull origin master
           .\bootstrap-vcpkg.bat
           vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
+          if ("${{ matrix.QT_VER }}" -eq "5.15"){
+            vcpkg install qt5-tools
+          }
 
       - name: Install PyQt
         run: |
-          if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
+          if ("${{ matrix.QT_VER }}" -eq "5.15") {
             pip install pyqt5
           } else {
             pip install pyqt6
