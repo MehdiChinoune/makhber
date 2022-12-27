@@ -32,7 +32,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: 'pypy3.10'
 
       - name: Restore cached Qt
         id: cache-qt
@@ -155,7 +155,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: 'pypy3.10'
 
       - name: Restore cached Qt
         id: cache-qt
@@ -244,151 +244,151 @@ jobs:
           $Env:PATH = "$Env:GITHUB_WORKSPACE\Qwt\lib;$Env:PATH"
           ctest --preset msvc-vcpkg -C RelWithDebInfo --repeat until-pass:3
 
-  MINGW:
-    name: MINGW-${{ matrix.msystem }}-Qt${{ matrix.QT_VER }}
-    runs-on: windows-2022
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - msystem: UCRT64
-            QT_VER: 5
-          - msystem: UCRT64
-            QT_VER: 6
-          - msystem: CLANG64
-            QT_VER: 5
-          - msystem: CLANG64
-            QT_VER: 6
-    env:
-      CCACHE_DIR: build/ccache
-    defaults:
-      run:
-        shell: msys2 {0}
+  # MINGW:
+  #   name: MINGW-${{ matrix.msystem }}-Qt${{ matrix.QT_VER }}
+  #   runs-on: windows-2022
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       include:
+  #         - msystem: UCRT64
+  #           QT_VER: 5
+  #         - msystem: UCRT64
+  #           QT_VER: 6
+  #         - msystem: CLANG64
+  #           QT_VER: 5
+  #         - msystem: CLANG64
+  #           QT_VER: 6
+  #   env:
+  #     CCACHE_DIR: build/ccache
+  #   defaults:
+  #     run:
+  #       shell: msys2 {0}
 
-    steps:
-      - name: Get Processor Info
-        shell: pwsh
-        run : |
-          Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: true
+  #   steps:
+  #     - name: Get Processor Info
+  #       shell: pwsh
+  #       run : |
+  #         Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: true
 
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ matrix.msystem }}
-          release: false
-          update: true
-          install: pactoys make
+  #     - uses: msys2/setup-msys2@v2
+  #       with:
+  #         msystem: ${{ matrix.msystem }}
+  #         release: false
+  #         update: true
+  #         install: pactoys make
 
-      - name: Restore/Cache packages
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}
-          key: ${{ matrix.msystem }}-${{ matrix.QT_VER }}-${{ github.sha }}
-          restore-keys: ${{ matrix.msystem }}-${{ matrix.QT_VER }}-
-      - name: Install prerequisties
-        run: |
-          pacboy -S --noconfirm --disable-download-timeout \
-            --cachedir $(cygpath "${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}") \
-            cc:p \
-            cmake:p \
-            ninja:p \
-            qt${{ matrix.QT_VER }}-base:p \
-            qt${{ matrix.QT_VER }}-svg:p \
-            qt${{ matrix.QT_VER }}-tools:p \
-            qwt-qt${{ matrix.QT_VER }}:p \
-            gsl:p \
-            muparser:p \
-            liborigin:p \
-            gl2ps:p \
-            pyqt-builder:p \
-            python-pyqt${{ matrix.QT_VER }}:p \
-            python-numpy:p \
-            gtest:p \
-            ccache:p \
-            make:p
-          pacman -Sc --noconfirm --cachedir $(cygpath "${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}")
+  #     - name: Restore/Cache packages
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}
+  #         key: ${{ matrix.msystem }}-${{ matrix.QT_VER }}-${{ github.sha }}
+  #         restore-keys: ${{ matrix.msystem }}-${{ matrix.QT_VER }}-
+  #     - name: Install prerequisties
+  #       run: |
+  #         pacboy -S --noconfirm --disable-download-timeout \
+  #           --cachedir $(cygpath "${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}") \
+  #           cc:p \
+  #           cmake:p \
+  #           ninja:p \
+  #           qt${{ matrix.QT_VER }}-base:p \
+  #           qt${{ matrix.QT_VER }}-svg:p \
+  #           qt${{ matrix.QT_VER }}-tools:p \
+  #           qwt-qt${{ matrix.QT_VER }}:p \
+  #           gsl:p \
+  #           muparser:p \
+  #           liborigin:p \
+  #           gl2ps:p \
+  #           pyqt-builder:p \
+  #           python-pyqt${{ matrix.QT_VER }}:p \
+  #           python-numpy:p \
+  #           gtest:p \
+  #           ccache:p \
+  #           make:p
+  #         pacman -Sc --noconfirm --cachedir $(cygpath "${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}")
 
-      - name: Restore/Cache Build Directory
-        uses: actions/cache@v4
-        with:
-          path: build
-          key: build-${{ matrix.msystem }}-${{ matrix.QT_VER }}-${{ github.sha }}
-          restore-keys: build-${{ matrix.msystem }}-${{ matrix.QT_VER }}-
-      - name: Configuring
-        run: |
-          cmake \
-            --preset msys2 \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DBUILD_SHARED_LIBS=ON
+  #     - name: Restore/Cache Build Directory
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: build
+  #         key: build-${{ matrix.msystem }}-${{ matrix.QT_VER }}-${{ github.sha }}
+  #         restore-keys: build-${{ matrix.msystem }}-${{ matrix.QT_VER }}-
+  #     - name: Configuring
+  #       run: |
+  #         cmake \
+  #           --preset msys2 \
+  #           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+  #           -DCMAKE_BUILD_TYPE=Debug \
+  #           -DBUILD_SHARED_LIBS=ON
 
-      - name: Building
-        run: |
-          cmake --build --preset msys2
+  #     - name: Building
+  #       run: |
+  #         cmake --build --preset msys2
 
-      - name: Testing
-        run: |
-          ctest --preset msys2 --repeat until-pass:3
+  #     - name: Testing
+  #       run: |
+  #         ctest --preset msys2 --repeat until-pass:3
 
-  macos:
-    runs-on: macos-${{ matrix.macos_ver }}
-    name: macos
-    strategy:
-      fail-fast: false
-      matrix:
-        QT_VER: [5, 6]
-        macos_ver: [14, 15]
-    env:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-      CCACHE_DIR: build/ccache
+  # macos:
+  #   runs-on: macos-${{ matrix.macos_ver }}
+  #   name: macos
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       QT_VER: [5, 6]
+  #       macos_ver: [14, 15]
+  #   env:
+  #     HOMEBREW_NO_AUTO_UPDATE: 1
+  #     CCACHE_DIR: build/ccache
 
-    steps:
-      - name: Get Processor Info
-        run : |
-          sysctl -n machdep.cpu.brand_string
-          sysctl -n hw.logicalcpu
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: true
+  #   steps:
+  #     - name: Get Processor Info
+  #       run : |
+  #         sysctl -n machdep.cpu.brand_string
+  #         sysctl -n hw.logicalcpu
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         submodules: true
 
-      - name: Install prerequisties
-        run: |
-          brew list -1 | grep python | while read formula; do brew unlink $formula; brew link --overwrite $formula; done
-          brew update
-          brew install --display-times muparser liborigin gsl gl2ps googletest ccache
-          if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
-            brew install qwt-qt5
-          else
-            brew install qwt
-          fi
+  #     - name: Install prerequisties
+  #       run: |
+  #         brew list -1 | grep python | while read formula; do brew unlink $formula; brew link --overwrite $formula; done
+  #         brew update
+  #         brew install --display-times muparser liborigin gsl gl2ps googletest ccache
+  #         if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
+  #           brew install qwt-qt5
+  #         else
+  #           brew install qwt
+  #         fi
 
-      - name: Restore/Cache Build Directory
-        uses: actions/cache@v4
-        with:
-          path: build
-          key: build-${{ runner.os }}-${{ matrix.macos_ver }}-${{ matrix.QT_VER }}-${{ github.sha }}
-          restore-keys: build-${{ runner.os }}-${{ matrix.macos_ver }}-${{ matrix.QT_VER }}-
+  #     - name: Restore/Cache Build Directory
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: build
+  #         key: build-${{ runner.os }}-${{ matrix.macos_ver }}-${{ matrix.QT_VER }}-${{ github.sha }}
+  #         restore-keys: build-${{ runner.os }}-${{ matrix.macos_ver }}-${{ matrix.QT_VER }}-
 
-      - name: Configuring
-        run: |
-          if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
-            export PATH=$(brew --prefix)/opt/qt@5/bin:$PATH
-            QWT_PATH=$(brew --prefix)/opt/qwt-qt5
-          fi
-          cmake \
-            --preset macos \
-            -DCMAKE_PREFIX_PATH=${QWT_PATH} \
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=${{ matrix.macos_ver }}
+  #     - name: Configuring
+  #       run: |
+  #         if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
+  #           export PATH=$(brew --prefix)/opt/qt@5/bin:$PATH
+  #           QWT_PATH=$(brew --prefix)/opt/qwt-qt5
+  #         fi
+  #         cmake \
+  #           --preset macos \
+  #           -DCMAKE_PREFIX_PATH=${QWT_PATH} \
+  #           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+  #           -DCMAKE_OSX_DEPLOYMENT_TARGET=${{ matrix.macos_ver }}
 
-      - name: Building
-        run: |
-          cmake --build --preset default -j$(sysctl -n hw.logicalcpu)
+  #     - name: Building
+  #       run: |
+  #         cmake --build --preset default -j$(sysctl -n hw.logicalcpu)
 
-      - name: Testing
-        run: |
-          ctest --preset default --repeat until-pass:3
+  #     - name: Testing
+  #       run: |
+  #         ctest --preset default --repeat until-pass:3
