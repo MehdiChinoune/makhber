@@ -129,6 +129,10 @@ jobs:
       fail-fast: false
       matrix:
         QT_VER: [5.15.2, 6.8.1]
+        QT_DEPLOY_API: [ON, OFF]
+        exclude:
+          - QT_VER: 5.15.2
+            QT_DEPLOY_API: ON
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: x64-windows
@@ -203,7 +207,7 @@ jobs:
         run: |
           cd $Env:VCPKG_INSTALLATION_ROOT
           git pull origin master
-          vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
+          vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf openssl
 
       - name: Install Python packages
         run: |
@@ -222,7 +226,9 @@ jobs:
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
             -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\Qwt" `
-            -DBUILD_SHARED_LIBS=ON
+            -DRUNTIME_DIRS="$Env:VCPKG_INSTALLATION_ROOT/installed/$Env:VCPKG_DEFAULT_TRIPLET/bin;$Env:GITHUB_WORKSPACE\Qwt\lib;$Env:Qt5_DIR\bin;$Env:Qt6_DIR\bin" `
+            -DBUILD_SHARED_LIBS=ON `
+            -DMAKHBER_USE_QT_CMAKE_DEPLOY_API=${{ matrix.QT_DEPLOY_API }}
 
       - name: Building
         run: |
@@ -232,6 +238,11 @@ jobs:
         run: |
           $Env:PATH = "$Env:GITHUB_WORKSPACE\Qwt\lib;$Env:PATH"
           ctest --preset msvc-vcpkg -C RelWithDebInfo --repeat until-pass:3
+
+      - name: Packaging
+        run: |
+          cd build\MSVC
+          cpack -G NSIS -C RelWithDebInfo
 
   MINGW:
     name: MINGW-${{ matrix.msystem }}-Qt${{ matrix.QT_VER }}
