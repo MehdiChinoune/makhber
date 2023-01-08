@@ -196,7 +196,8 @@ jobs:
           git pull origin master
           vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
           if ("${{ matrix.QT_VER }}" -eq "5.15"){
-            vcpkg install qwt
+            vcpkg install qt5-tools
+            vcpkg install qwt --overlay-ports=$Env:GITHUB_WORKSPACE\packaging\vcpkg-overlay-ports\qwt
           }
 
       - uses: actions/setup-python@v5
