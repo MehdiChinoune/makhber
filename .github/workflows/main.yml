@@ -107,11 +107,11 @@ jobs:
 
       - name: Install Python packages
         run: |
-          pip3 install sip pyqt-builder numpy
+          pip3 install numpy packaging setuptools
           if [[ "${{ matrix.QT_VER }}" == "5.15.2" ]]; then
-            pip3 install pyqt5
+            pip3 install --index-url https://www.riverbankcomputing.com/pypi/simple/ --no-deps --pre --upgrade PyQt5 PyQt5-sip sip pyqt-builder
           else
-            pip3 install pyqt6
+            pip3 install --index-url https://www.riverbankcomputing.com/pypi/simple/ --no-deps --pre --upgrade PyQt6 PyQt6-sip sip pyqt-builder
           fi
 
       - name: Restore/Cache Build Directory
@@ -232,11 +232,11 @@ jobs:
 
       - name: Install Python packages
         run: |
-          pip install sip pyqt-builder numpy
+          pip install numpy packaging setuptools
           if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
-            pip install pyqt5
+            pip install --index-url https://www.riverbankcomputing.com/pypi/simple/ --no-deps --pre --upgrade PyQt5 PyQt5-sip sip pyqt-builder
           } else {
-            pip install pyqt6
+            pip install --index-url https://www.riverbankcomputing.com/pypi/simple/ --no-deps --pre --upgrade PyQt6 PyQt6-sip sip pyqt-builder
           }
 
       - name: Configuring
