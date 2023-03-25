@@ -395,6 +395,7 @@ jobs:
 
       - name: Install prerequisties
         run: |
+          zypper -n dup
           zypper -n install \
             gcc-c++ \
             cmake \
