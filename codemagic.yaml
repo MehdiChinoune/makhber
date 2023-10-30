@@ -1,12 +1,10 @@
 workflows:
   macos-m1:
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m2
     triggering:
       events:
-        - tag
+        - push
     environment:
-      groups:
-        - my_tokens
       xcode: latest
     scripts:
       - name: Install common prerequisties
@@ -48,14 +46,5 @@ workflows:
         script: |
           cd build/macos-qt6
           cpack -G DragNDrop
-          mv *.dmg Makhber-${CM_TAG}-macos-$(uname -m)-Qt6.dmg
           cd ../../build/macos-qt5
           cpack -G DragNDrop
-          mv *.dmg Makhber-${CM_TAG}-macos-$(uname -m)-Qt5.dmg
-      - name: Uploading & Publishing
-        script: |
-          cp build/macos-qt6/Makhber-${CM_TAG}-macos-$(uname -m)-Qt6.dmg $CM_EXPORT_DIR/
-          cp build/macos-qt5/Makhber-${CM_TAG}-macos-$(uname -m)-Qt5.dmg $CM_EXPORT_DIR/
-          gh release upload "${CM_TAG}" \
-            build/macos-qt6/Makhber-${CM_TAG}-macos-$(uname -m)-Qt6.dmg \
-            build/macos-qt5/Makhber-${CM_TAG}-macos-$(uname -m)-Qt5.dmg
