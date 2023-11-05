@@ -426,7 +426,11 @@ endif()
 
 if( MAKHBER_SCRIPTING_PYTHON )
 
-  target_link_libraries( libmakhber Python3::Python )
+  if( Python3_VERSION VERSION_GREATER_EQUAL "3.10" AND TARGET Python3::SABIModule )
+    target_link_libraries( libmakhber Python3::Python Python3::SABIModule )
+  else()
+    target_link_libraries( libmakhber Python3::Python )
+  endif()
 
   if( SIP_VERSION VERSION_GREATER_EQUAL 5 )
     add_dependencies( libmakhber generate_SIP_HDR )
@@ -469,6 +473,14 @@ if( MAKHBER_SCRIPTING_PYTHON )
       APPEND
       PROPERTY COMPILE_DEFINITIONS
       PYTHONHOME=${PYTHONHOME}
+    )
+  endif()
+
+  if( Python3_VERSION VERSION_GREATER_EQUAL "3.10" )
+    set_property( SOURCE "scripting/PythonScript.cpp"
+      APPEND
+      PROPERTY COMPILE_DEFINITIONS
+      "Py_LIMITED_API=0x030A0000"
     )
   endif()
 

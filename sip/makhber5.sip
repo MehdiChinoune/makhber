@@ -31,7 +31,7 @@
  *                                                                         *
  ***************************************************************************/
 
-%Module makhber
+%Module (name = makhber, use_limited_api = True )
 %Import QtCore/QtCoremod.sip
 %Import QtGui/QtGuimod.sip
 %Import QtWidgets/QtWidgetsmod.sip
