@@ -428,7 +428,11 @@ endif()
 
 if( MAKHBER_SCRIPTING_PYTHON )
 
-  target_link_libraries( libmakhber Python3::Python )
+  if( TARGET Python3::SABIModule )
+    target_link_libraries( libmakhber Python3::Python Python3::SABIModule )
+  else()
+    target_link_libraries( libmakhber Python3::Python )
+  endif()
 
   add_dependencies( libmakhber generate_SIP_HDR )
   target_include_directories( libmakhber PRIVATE ${CMAKE_BINARY_DIR}/sip )
@@ -462,6 +466,12 @@ if( MAKHBER_SCRIPTING_PYTHON )
     "core/globals.cpp"
     APPEND
     PROPERTY COMPILE_DEFINITIONS SCRIPTING_PYTHON
+  )
+
+  set_property( SOURCE "scripting/PythonScript.cpp"
+    APPEND
+    PROPERTY COMPILE_DEFINITIONS
+    "Py_LIMITED_API=0x030A0000"
   )
 
   if( PYTHONHOME )

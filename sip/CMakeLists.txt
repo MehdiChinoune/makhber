@@ -107,6 +107,8 @@ list( PREPEND SIP_LINK_LIBS
   qwtplot3d
 )
 
+list( PREPEND SIP_COMPILE_DEFINITIONS "Py_LIMITED_API=0x030A0000")
+
 if( MULTI_CONFIG )
   if( BUILD_SHARED_LIBS )
     list( PREPEND SIP_LINK_DIRS
@@ -175,7 +177,11 @@ endif()
 if( WIN32 )
   set( module_name makhber.pyd )
 else()
-  set( module_name makhber${_Python3_EXT_SUFFIX} )
+  if( TARGET Python3::SABIModule )
+    set( module_name makhber.abi3.so )
+  else()
+    set( module_name makhber${_Python3_EXT_SUFFIX} )
+  endif()
 endif()
 
 if( MULTI_CONFIG )

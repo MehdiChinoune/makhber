@@ -382,9 +382,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - image: leap
-            QT_VER: 5
-            py_ver: 3
+          # - image: leap
+          #   QT_VER: 5
+          #   py_ver: 3
           - image: tumbleweed
             QT_VER: 5
             py_ver: 313

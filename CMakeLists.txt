@@ -163,7 +163,10 @@ if( MAKHBER_SCRIPTING_PYTHON )
     set( Python3_FIND_REGISTRY LAST )
   endif()
 
-  find_package( Python3 COMPONENTS Interpreter Development REQUIRED )
+  find_package( Python3 3.10 COMPONENTS Interpreter Development REQUIRED )
+  if( CMAKE_VERSION VERSION_GREATER_EQUAL "3.26" )
+    find_package( Python3 OPTIONAL_COMPONENTS Development.SABIModule )
+  endif()
 
   find_package( SIP 6 REQUIRED )
 
