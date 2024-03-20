@@ -16,6 +16,8 @@ jobs:
         QT_VER: [5.15.2, 6.6.2]
     env:
       QWT_VER: 6.2.0
+      CC: clang-14
+      CXX: clang++-14
 
     steps:
       - name: Get Processor Info
@@ -47,6 +49,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y --no-install-recommends \
+            clang \
             libglu1-mesa-dev \
             libmuparser-dev \
             libgsl-dev \
@@ -210,6 +213,7 @@ jobs:
         run: |
           cmake `
             --preset msvc-vcpkg `
+            -T ClangCl `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
