@@ -975,7 +975,7 @@ public:
     char d_default_numeric_format {};
 
     //! pointer to the current folder in the project
-    Folder *current_folder;
+    Folder *current_folder {};
     //! Describes which windows are shown when the folder becomes the current folder
     ShowWindowsPolicy show_windows_policy;
     enum { MaxRecentProjects = 10 };
@@ -1222,7 +1222,7 @@ private:
 
     QLabel *d_status_info {};
 
-    Project *d_project;
+    Project *d_project {};
 
 private Q_SLOTS:
     void removeDependentTableStatistics(const AbstractAspect *aspect);
