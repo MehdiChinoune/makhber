@@ -73,8 +73,8 @@ private:
     QList<AbstractAspect *> d_children;
     QString d_name, d_comment, d_caption_spec;
     QDateTime d_creation_time;
-    AbstractAspect *d_owner;
-    AbstractAspect *d_parent;
+    AbstractAspect *d_owner {};
+    AbstractAspect *d_parent {};
 };
 
 #endif // ifndef ASPECT_PRIVATE_H

@@ -139,7 +139,6 @@
 #include <QtDebug>
 #include <QDialogButtonBox>
 #include <QUndoView>
-#include <QUndoStack>
 #include <QTemporaryFile>
 #include <QDebug>
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
@@ -193,7 +192,6 @@ ApplicationWindow::ApplicationWindow()
       //      hiddenWindows(new QList<MyWidget*>()),
       //      outWindows(new QList<MyWidget*>()),
       lastModified(nullptr),
-      current_folder(new Folder(tr("UNTITLED"))),
       show_windows_policy(ActiveFolder),
       appStyle(qApp->style()->objectName()),
       appFont(QFont()),
@@ -265,6 +263,7 @@ ApplicationWindow::ApplicationWindow()
     connect(&folders, SIGNAL(addFolderItem()), this, SLOT(addFolder()));
     connect(&folders, SIGNAL(deleteSelection()), this, SLOT(deleteSelectedItems()));
 
+    current_folder = new Folder(tr("UNTITLED"));
     auto *fli = new FolderListItem(&folders, current_folder);
     current_folder->setFolderListItem(fli);
     folders.setCurrentItem(fli);
@@ -3528,10 +3527,10 @@ bool ApplicationWindow::loadProject(const QString &fn)
         return false;
     }
 
-    auto jsError = new QJsonParseError();
-    auto jsDoc = QJsonDocument::fromJson(project_file->readAll(), jsError);
-    if (jsError->error != QJsonParseError::NoError) {
-        QMessageBox::critical(this, tr("File opening error"), jsError->errorString());
+    QJsonParseError jsError {};
+    auto jsDoc = QJsonDocument::fromJson(project_file->readAll(), &jsError);
+    if (jsError.error != QJsonParseError::NoError) {
+        QMessageBox::critical(this, tr("File opening error"), jsError.errorString());
         return false;
     }
 
@@ -9805,7 +9804,7 @@ void ApplicationWindow::createActions()
     actionAddImage->setShortcut(tr("ALT+I"));
     connect(actionAddImage, SIGNAL(triggered()), this, SLOT(addImage()));
 
-    d_plot_mapper = new QSignalMapper;
+    d_plot_mapper = new QSignalMapper(this);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     connect(d_plot_mapper, SIGNAL(mappedInt(int)), this, SLOT(selectPlotType(int)));
 #else
@@ -12619,6 +12618,10 @@ ApplicationWindow::~ApplicationWindow()
 {
     if (lastCopiedLayer)
         delete lastCopiedLayer;
+    if (d_project)
+        delete d_project;
+    if (current_folder)
+        delete current_folder;
 
     QApplication::clipboard()->clear(QClipboard::Clipboard);
 }

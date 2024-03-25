@@ -313,7 +313,7 @@ protected:
     void info(const QString &text) { Q_EMIT statusInfo(text); }
 
 private:
-    Private *d_aspect_private;
+    Private *d_aspect_private {};
 };
 
 #endif // ifndef ABSTRACT_ASPECT_H
