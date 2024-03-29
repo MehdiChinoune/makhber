@@ -54,6 +54,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y --no-install-recommends \
+            doxygen \
             libglu1-mesa-dev \
             libmuparser-dev \
             libgsl-dev \
@@ -111,11 +112,16 @@ jobs:
             --preset default \
             -DMAKHBER_SEARCH_FOR_UPDATES=OFF \
             -DMAKHBER_DOWNLOAD_LINKS=OFF \
+            -DMAKHBER_BUILD_CODE_DOCS=ON \
             -DCMAKE_PREFIX_PATH=${GITHUB_WORKSPACE}/Qwt
 
       - name: Building
         run: |
           xvfb-run cmake --build --preset default -j$(nproc)
+
+      - name: Building docs
+        run: |
+          xvfb-run -a cmake --build --preset default --target code_documentation
 
       - name: Testing
         run: |
@@ -303,6 +309,7 @@ jobs:
             python-pyqt${{ matrix.QT_VER }}:p \
             python-numpy:p \
             gtest:p \
+            doxygen:p \
             make:p
           pacman -Sc --noconfirm --cachedir $(cygpath "${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}")
 
@@ -311,11 +318,16 @@ jobs:
           cmake \
             --preset msys2 \
             -DCMAKE_BUILD_TYPE=Debug \
-            -DBUILD_SHARED_LIBS=ON
+            -DBUILD_SHARED_LIBS=ON \
+            -DMAKHBER_BUILD_CODE_DOCS=ON
 
       - name: Building
         run: |
           cmake --build --preset msys2
+
+      - name: Building docs
+        run: |
+          cmake --build --preset msys2 --target code_documentation
 
       - name: Testing
         run: |
@@ -347,7 +359,7 @@ jobs:
         run: |
           brew list -1 | grep python | while read formula; do brew unlink $formula; brew link --overwrite $formula; done
           brew update
-          brew install --display-times muparser liborigin gsl gl2ps googletest
+          brew install --display-times muparser liborigin gsl gl2ps googletest doxygen
           if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
             brew install qwt-qt5
           else
@@ -362,11 +374,16 @@ jobs:
           fi
           cmake \
             --preset macos \
-            -DCMAKE_PREFIX_PATH=${QWT_PATH}
+            -DCMAKE_PREFIX_PATH=${QWT_PATH} \
+            -DMAKHBER_BUILD_CODE_DOCS=ON
 
       - name: Building
         run: |
           cmake --build --preset default -j$(sysctl -n hw.logicalcpu)
+
+      - name: Building docs
+        run: |
+          cmake --build --preset default --target code_documentation
 
       - name: Testing
         run: |
