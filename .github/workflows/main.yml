@@ -18,6 +18,7 @@ jobs:
         QT_VER: [5.15.2, 6.8.1]
     env:
       QWT_VER: 6.3.0
+      CCACHE_DIR: build/ccache
 
     steps:
       - name: Get Processor Info
@@ -55,6 +56,7 @@ jobs:
           sudo apt update
           sudo apt install -y --no-install-recommends \
             doxygen \
+            ccache \
             libglu1-mesa-dev \
             libmuparser-dev \
             libgsl-dev \
@@ -107,10 +109,18 @@ jobs:
             pip3 install pyqt6
           fi
 
+      - name: Restore/Cache Build Directory
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ runner.os }}-${{ matrix.QT_VER }}-${{ github.sha }}
+          restore-keys: build-${{ runner.os }}-${{ matrix.QT_VER }}-
+
       - name: Configuring
         run: |
           cmake \
             --preset default \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             -DMAKHBER_SEARCH_FOR_UPDATES=OFF \
             -DMAKHBER_DOWNLOAD_LINKS=OFF \
             -DMAKHBER_BUILD_CODE_DOCS=ON \
@@ -143,6 +153,7 @@ jobs:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: x64-windows
       QWT_VER: 6.3.0
+      CCACHE_DIR: build/ccache
 
     steps:
       - name: Get Processor Info
@@ -224,10 +235,22 @@ jobs:
             pip install pyqt6
           }
 
+      - name: Install ccache
+        run: |
+          choco install ccache --no-progress
+
+      - name: Restore/Cache Build Directory
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ runner.os }}-${{ matrix.QT_VER }}-${{ github.sha }}
+          restore-keys: build-${{ runner.os }}-${{ matrix.QT_VER }}-
+
       - name: Configuring
         run: |
           cmake `
             --preset msvc-vcpkg `
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
@@ -267,6 +290,8 @@ jobs:
             QT_VER: 5
           - msystem: CLANG64
             QT_VER: 6
+    env:
+      CCACHE_DIR: build/ccache
     defaults:
       run:
         shell: msys2 {0}
@@ -314,13 +339,21 @@ jobs:
             python-numpy:p \
             gtest:p \
             doxygen:p \
+            ccache:p \
             make:p
           pacman -Sc --noconfirm --cachedir $(cygpath "${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}")
 
+      - name: Restore/Cache Build Directory
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ matrix.msystem }}-${{ matrix.QT_VER }}-${{ github.sha }}
+          restore-keys: build-${{ matrix.msystem }}-${{ matrix.QT_VER }}-
       - name: Configuring
         run: |
           cmake \
             --preset msys2 \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             -DCMAKE_BUILD_TYPE=Debug \
             -DBUILD_SHARED_LIBS=ON \
             -DMAKHBER_BUILD_CODE_DOCS=ON
@@ -347,6 +380,7 @@ jobs:
         macos_ver: [14, 15]
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
+      CCACHE_DIR: build/ccache
 
     steps:
       - name: Get Processor Info
@@ -362,12 +396,19 @@ jobs:
         run: |
           brew list -1 | grep python | while read formula; do brew unlink $formula; brew link --overwrite $formula; done
           brew update
-          brew install --display-times muparser liborigin gsl gl2ps googletest doxygen
+          brew install --display-times muparser liborigin gsl gl2ps googletest doxygen ccache
           if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
             brew install qwt-qt5
           else
             brew install qwt
           fi
+
+      - name: Restore/Cache Build Directory
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ runner.os }}-${{ matrix.QT_VER }}-${{ github.sha }}
+          restore-keys: build-${{ runner.os }}-${{ matrix.QT_VER }}-
 
       - name: Configuring
         run: |
@@ -378,6 +419,7 @@ jobs:
           cmake \
             --preset macos \
             -DCMAKE_PREFIX_PATH=${QWT_PATH} \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             -DMAKHBER_BUILD_CODE_DOCS=ON
 
       - name: Building
