@@ -111,6 +111,7 @@ jobs:
           - QT_VER: "6.10.2"
     env:
       VCPKG_BINARY_SOURCES: "clear;nuget,GitHub,readwrite"
+      VCPKG_DEFAULT_TRIPLET: x64-linux-dynamic
       QWT_VER: 6.3.0
       PYTHON_VERSION: "3.13"
 
@@ -216,6 +217,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release \
             -DBUILD_SHARED_LIBS=ON \
             -DOpenGL_GL_PREFERENCE=LEGACY \
+            -DVCPKG_TARGET_TRIPLET="$VCPKG_DEFAULT_TRIPLET" \
             -DCMAKE_TOOLCHAIN_FILE=$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake \
             -DCMAKE_PREFIX_PATH=${GITHUB_WORKSPACE}/Qwt
 
@@ -227,7 +229,7 @@ jobs:
         run: |
           cd build
           make install DESTDIR=AppDir
-          export LD_LIBRARY_PATH=${PWD}/bin:${GITHUB_WORKSPACE}/Qwt/lib:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=${PWD}/bin:${GITHUB_WORKSPACE}/Qwt/lib:$VCPKG_INSTALLATION_ROOT/installed/$VCPKG_DEFAULT_TRIPLET/lib:$LD_LIBRARY_PATH
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           wget https://raw.githubusercontent.com/linuxdeploy/linuxdeploy-plugin-conda/master/linuxdeploy-plugin-conda.sh
