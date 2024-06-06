@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        QT_VER: [5.15.2, 6.7.2]
+        QT_VER: [5.15.2, 6.8.0]
     env:
       QWT_VER: 6.3.0
 
@@ -67,7 +67,8 @@ jobs:
             sudo apt install -y --no-install-recommends \
               libxkbcommon-dev \
               libxcb-cursor0 \
-              libvulkan-dev
+              libvulkan-dev \
+              libcups2-dev
           fi
 
       - name: Get GCC version
@@ -127,7 +128,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        QT_VER: [5.15.2, 6.7.2]
+        include:
+          - QT_VER: 5.15.2
+            QT_ARCH: win64_msvc2019_64
+          - QT_VER: 6.8.0
+            QT_ARCH: win64_msvc2022_64
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: x64-windows
@@ -162,6 +167,7 @@ jobs:
           dir: ${{ github.workspace }}/Qt
           archives: qtbase qtsvg qttools qttranslations
           aqtversion: '==3.1.*'
+          arch: ${{ matrix.QT_ARCH }}
 
       - name: Restore cached Qwt
         id: cache-qwt
