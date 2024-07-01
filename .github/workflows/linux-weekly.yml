@@ -8,7 +8,7 @@ on:
 
 jobs:
   Snap:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     name: Snap
 
     steps:
@@ -28,6 +28,7 @@ jobs:
 
       - name: Installing
         run: |
+          sudo snap install core26 --edge
           sudo snap install --dangerous ${{ steps.build.outputs.snap }}
 
       - name: Show info and contents

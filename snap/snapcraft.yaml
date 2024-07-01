@@ -7,16 +7,17 @@ type: app
 icon: packaging/freedesktop/com.github.makhber.Makhber.svg
 website: https://github.com/Makhber/makhber
 issues: https://github.com/Makhber/makhber/issues
-base: core22
+base: core26
+build-base: devel
 compression: lzo
-grade: stable
+grade: devel
 confinement: strict
 adopt-info: makhber
-architectures:
-  - build-on: amd64
-  - build-on: arm64
-  - build-on: ppc64el
-  - build-on: s390x
+platforms:
+  amd64:
+  arm64:
+  ppc64el:
+  s390x:
 
 apps:
   makhber:
@@ -52,7 +53,7 @@ parts:
       - "-DPYTHON_INSTALL_PATH=lib/python3/dist-packages"
     build-environment:
       - PATH: $HOME/.local/bin:$PATH
-      - PYTHONPATH: $CRAFT_STAGE/usr/lib/python3/dist-packages:$HOME/.local/lib/python3.10/site-packages:/usr/local/lib/python3.10/dist-packages:/usr/lib/python3/dist-packages
+      - PYTHONPATH: $CRAFT_STAGE/usr/lib/python3/dist-packages:$HOME/.local/lib/python3.14/site-packages:/usr/local/lib/python3.14/dist-packages:/usr/lib/python3/dist-packages
     build-packages:
       - g++
       - git
@@ -62,7 +63,7 @@ parts:
       - pkgconf
     stage-packages:
       - libglu1-mesa
-      - libpython3.10
+      - libpython3.14
       - libqt5svg5
       - libqt5opengl5
       - libqt5printsupport5
@@ -154,6 +155,7 @@ parts:
     cmake-parameters:
       - "-DCMAKE_BUILD_TYPE=Release"
       - "-DCMAKE_INSTALL_PREFIX=/usr"
+      - "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
     build-packages:
       - g++
     stage-packages:
@@ -181,7 +183,7 @@ parts:
     build-environment:
       - PATH: $HOME/.local/bin:$PATH
     override-build: |
-      pip3 install sip pyqt-builder
+      pip3 install --break-system-packages sip pyqt-builder
       cd $CRAFT_PART_SRC
       sip-build --confirm-license \
         --build-dir ../build \
