@@ -81,6 +81,7 @@ parts:
       - pyqt5-sip
   desktop-qt5:
     source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-branch: qt6
     source-subdir: qt
     plugin: make
     make-parameters: ["FLAVOR=qt5"]
