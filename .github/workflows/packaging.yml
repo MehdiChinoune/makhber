@@ -290,6 +290,7 @@ jobs:
             libglu1-mesa-dev \
             libgl2ps-dev \
             xvfb \
+            libfuse2 \
             wget
           pip3 install pyqt5 sip pyqt-builder
 
