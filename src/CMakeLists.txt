@@ -430,10 +430,8 @@ if( MAKHBER_SCRIPTING_PYTHON )
 
   target_link_libraries( libmakhber Python3::Python )
 
-  if( SIP_VERSION VERSION_GREATER_EQUAL 5 )
-    add_dependencies( libmakhber generate_SIP_HDR )
-    target_include_directories( libmakhber PRIVATE ${CMAKE_BINARY_DIR}/sip )
-  endif()
+  add_dependencies( libmakhber generate_SIP_HDR )
+  target_include_directories( libmakhber PRIVATE ${CMAKE_BINARY_DIR}/sip )
 
   if( MSVC )
     set( PYTHONPATH "." )

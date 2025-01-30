@@ -31,9 +31,7 @@ set( SIP_COMPONENTS Legacy Build Module )
 
 foreach( comp ${SIP_COMPONENTS} )
 
-  if( ${comp} STREQUAL "Legacy" )
-    set( sip_names sip sip5 )
-  elseif( ${comp} STREQUAL "Build" )
+  if( ${comp} STREQUAL "Build" )
     set( sip_names sip-build )
   elseif( ${comp} STREQUAL "Module" )
     set( sip_names sip-module )
@@ -57,10 +55,6 @@ endforeach()
 
 if( SIP_Build_FOUND AND SIP_Module_FOUND )
   set( SIP_EXECUTABLES ${SIP_Build_EXECUTABLE} ${SIP_Module_EXECUTABLE} )
-elseif( SIP_Legacy_FOUND AND SIP_Module_FOUND )
-  set( SIP_EXECUTABLES ${SIP_Legacy_EXECUTABLE} ${SIP_Module_EXECUTABLE} )
-elseif( SIP_Legacy_FOUND AND SIP_VERSION VERSION_LESS 5 )
-  set( SIP_EXECUTABLES ${SIP_Legacy_EXECUTABLE} )
 endif()
 
 execute_process(
