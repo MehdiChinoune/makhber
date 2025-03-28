@@ -122,6 +122,7 @@ jobs:
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             -DMAKHBER_SEARCH_FOR_UPDATES=OFF \
             -DMAKHBER_DOWNLOAD_LINKS=OFF \
+            -DMAKHBER_BUILD_TRANSLATIONS=OFF \
             -DCMAKE_PREFIX_PATH=${GITHUB_WORKSPACE}/Qwt
 
       - name: Building
@@ -233,6 +234,7 @@ jobs:
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
             -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\Qwt" `
+            -DMAKHBER_BUILD_TRANSLATIONS=OFF `
             -DBUILD_SHARED_LIBS=ON
 
       - name: Building
