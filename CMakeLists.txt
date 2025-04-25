@@ -113,14 +113,18 @@ find_package( Qt${QT_VERSION_MAJOR}
     Gui
     Widgets
     PrintSupport
-    OpenGL
     Svg
   REQUIRED
 )
 
 find_package( GSL REQUIRED )
 
-find_package( OpenGL COMPONENTS OpenGL REQUIRED )
+message(STATUS "CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
+
+if(NOT (MSVC AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*|arm64.*|ARM64.*)") )
+  find_package( Qt${QT_VERSION_MAJOR} COMPONENTS OpenGL REQUIRED )
+  find_package( OpenGL COMPONENTS OpenGL REQUIRED )
+endif()
 
 find_package( muparser REQUIRED )
 
