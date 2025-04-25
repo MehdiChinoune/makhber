@@ -109,18 +109,25 @@ else()
 endif()
 
 find_package( Qt${QT_VERSION_MAJOR}
+  REQUIRED
   COMPONENTS
     Gui
     Widgets
     PrintSupport
-    OpenGL
     Svg
-  REQUIRED
+  OPTIONAL_COMPONENTS
+    OpenGL
 )
+
+if( Qt${QT_VERSION_MAJOR}OpenGL_FOUND )
+  find_package( OpenGL COMPONENTS OpenGL REQUIRED )
+endif()
 
 find_package( GSL REQUIRED )
 
-find_package( OpenGL COMPONENTS OpenGL REQUIRED )
+message(STATUS "CMAKE_HOST_SYSTEM_PROCESSOR: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+message(STATUS "CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "CMAKE_CXX_COMPILER_ARCHITECTURE_ID: ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID}")
 
 find_package( muparser REQUIRED )
 

@@ -333,10 +333,7 @@ target_link_libraries( libmakhber
   Qt${QT_VERSION_MAJOR}::Core
   Qt${QT_VERSION_MAJOR}::Gui
   Qt${QT_VERSION_MAJOR}::PrintSupport
-  Qt${QT_VERSION_MAJOR}::OpenGL
   Qt${QT_VERSION_MAJOR}::Svg
-  OpenGL::GL
-  OpenGL::GLU
   muparser::muparser
   GSL::gsl
   GSL::gslcblas
@@ -391,6 +388,14 @@ endif()
 
 if( WIN32 )
   target_compile_definitions( libmakhber PUBLIC "_USE_MATH_DEFINES" )
+endif()
+
+if( Qt${QT_VERSION_MAJOR}OpenGL_FOUND )
+  target_link_libraries( libmakhber
+    Qt${QT_VERSION_MAJOR}::OpenGL
+    OpenGL::GL
+    OpenGL::GLU
+  )
 endif()
 
 if( MAKHBER_SEARCH_FOR_UPDATES OR MAKHBER_DOWNLOAD_LINKS )
