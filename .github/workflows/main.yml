@@ -148,6 +148,8 @@ jobs:
             QT_VER: "6.9.0"
           - os_ver: "2025"
             QT_VER: "5.15.2"
+          - os_ver: "11-arm"
+            QT_VER: "6.9.0"
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: x64-windows
