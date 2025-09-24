@@ -251,19 +251,31 @@ jobs:
 
   MINGW:
     name: MINGW-${{ matrix.msystem }}-Qt${{ matrix.QT_VER }}
-    runs-on: windows-2022
+    runs-on: windows-${{ matrix.os_ver }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - msystem: UCRT64
             QT_VER: 5
+            os_ver: "2025"
+            new_msys2: false
           - msystem: UCRT64
             QT_VER: 6
+            os_ver: "2025"
+            new_msys2: false
           - msystem: CLANG64
             QT_VER: 5
+            os_ver: "2025"
+            new_msys2: false
           - msystem: CLANG64
             QT_VER: 6
+            os_ver: "2025"
+            new_msys2: false
+          - msystem: CLANGARM64
+            QT_VER: 6
+            os_ver: "11-arm"
+            new_msys2: true
     env:
       CCACHE_DIR: build/ccache
     defaults:
@@ -283,7 +295,7 @@ jobs:
       - uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.msystem }}
-          release: false
+          release: ${{ matrix.new_msys2 }}
           update: true
           install: pactoys make
 
