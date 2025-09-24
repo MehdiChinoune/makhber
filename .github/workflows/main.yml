@@ -140,14 +140,23 @@ jobs:
 
   MSVC:
     name: MSVC 2022
-    runs-on: windows-2025
+    runs-on: windows-${{ matrix.os_ver }}
     strategy:
       fail-fast: false
       matrix:
-        QT_VER: [5.15.2, 6.9.2]
+        include:
+          - os_ver: "2025"
+            QT_VER: "5.15.2"
+            triplet: x64-windows
+          - os_ver: "2025"
+            QT_VER: "6.9.2"
+            triplet: x64-windows
+          - os_ver: "11-arm"
+            QT_VER: "6.9.2"
+            triplet: arm64-windows
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
-      VCPKG_DEFAULT_TRIPLET: x64-windows
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
       QWT_VER: 6.3.0
 
     steps:
@@ -169,7 +178,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/Qt
-          key: ${{ runner.os }}-Qt-${{ matrix.QT_VER }}-Cache
+          key: ${{ runner.os }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-Cache
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
@@ -185,7 +194,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ github.workspace }}/Qwt
-          key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.QT_VER }}
+          key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}
 
       - uses: ilammy/msvc-dev-cmd@v1
         if: steps.cache-qwt.outputs.cache-hit != 'true'
@@ -237,6 +246,8 @@ jobs:
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
+            -DPython3_FIND_REGISTRY=NEVER `
+            -DPython3_EXECUTABLE=${{ env.pythonLocation }}/python3.exe `
             -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\Qwt" `
             -DBUILD_SHARED_LIBS=ON
 
