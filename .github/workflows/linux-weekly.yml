@@ -21,17 +21,14 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - name: Install snapcraft
-        run: |
-          sudo snap install --candidate snapcraft --classic
-
-      - name: Building & Packaging
-        run: |
-          sudo snapcraft --verbose --destructive-mode
+      - uses: snapcore/action-build@v1
+        id: build
+        with:
+          snapcraft-channel: candidate
 
       - name: Installing
         run: |
-          sudo snap install --dangerous *.snap
+          sudo snap install --dangerous ${{ steps.build.outputs.snap }}
 
       - name: Show info and contents
         run: |
@@ -42,7 +39,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: snap
-          path: '*.snap'
+          path: ${{ steps.build.outputs.snap }}
 
   Flatpak:
     runs-on: ubuntu-22.04
