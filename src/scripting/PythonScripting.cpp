@@ -66,7 +66,7 @@ QString PythonScripting::toString(PyObject *object, bool decref)
         Py_DECREF(object);
     if (!repr)
         return "";
-    ret = PyUnicode_AsUTF8(repr);
+    ret = PyUnicode_AsUTF8AndSize(repr, nullptr);
     Py_DECREF(repr);
     return ret;
 }
@@ -152,9 +152,9 @@ QString PythonScripting::errorMsg()
             PyCodeObject *f_code = frame->f_code;
             Py_INCREF(f_code);
 #endif
-            msg.append("at ").append(PyUnicode_AsUTF8(f_code->co_filename));
+            msg.append("at ").append(PyUnicode_AsUTF8AndSize(f_code->co_filename, nullptr));
             msg.append(":").append(QString::number(excit->tb_lineno));
-            if (f_code->co_name && *(fname = PyUnicode_AsUTF8(f_code->co_name)) != '?')
+            if (f_code->co_name && *(fname = PyUnicode_AsUTF8AndSize(f_code->co_name, nullptr)) != '?')
                 msg.append("\n");
             excit = excit->tb_next;
             Py_DECREF(f_code);
@@ -416,7 +416,7 @@ const QStringList PythonScripting::mathFunctions() const
     Py_ssize_t i = 0;
     while (PyDict_Next(math, &i, &key, &value))
         if (PyCallable_Check(value))
-            flist << PyUnicode_AsUTF8(key);
+            flist << PyUnicode_AsUTF8AndSize(key, nullptr);
     flist.sort();
     return flist;
 }
@@ -428,7 +428,7 @@ const QString PythonScripting::mathFunctionDoc(const QString &name) const
     if (!mathf)
         return "";
     PyObject *pydocstr = PyObject_GetAttrString(mathf, "__doc__"); // new
-    QString qdocstr = PyUnicode_AsUTF8(pydocstr);
+    QString qdocstr = PyUnicode_AsUTF8AndSize(pydocstr, nullptr);
     Py_XDECREF(pydocstr);
     PyGILState_Release(state);
     return qdocstr;

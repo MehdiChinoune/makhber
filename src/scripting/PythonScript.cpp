@@ -37,9 +37,6 @@
 #    undef _POSIX_C_SOURCE
 #endif
 #include <Python.h>
-#if PY_VERSION_HEX < 0x030D0000
-#    define PyUnicode_AsUTF8(arg) PyUnicode_AsUTF8AndSize(arg, nullptr)
-#endif
 
 #include <QObject>
 #include <QVariant>
@@ -156,7 +153,7 @@ bool PythonScript::compile(bool for_eval)
         Py_ssize_t i = 0;
         QString signature = "";
         while (PyDict_Next(topLevelLocal, &i, &key, &value))
-            signature.append(PyUnicode_AsUTF8(key)).append(",");
+            signature.append(PyUnicode_AsUTF8AndSize(key, nullptr)).append(",");
         signature.truncate(signature.length() - 1);
         QString fdef = "def __doit__(" + signature + "):\n";
         fdef.append(Code);
@@ -238,7 +235,7 @@ QVariant PythonScript::eval()
     if (!qret.isValid()) {
         PyObject *pystring = PyObject_Str(pyret);
         if (pystring) {
-            qret = QVariant(QString(PyUnicode_AsUTF8(pystring)));
+            qret = QVariant(QString(PyUnicode_AsUTF8AndSize(pystring, nullptr)));
             Py_DECREF(pystring);
         }
     }
