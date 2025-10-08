@@ -37,12 +37,6 @@
 %Import QtWidgets/QtWidgetsmod.sip
 %Import QtPrintSupport/QtPrintSupportmod.sip
 
-%ExportedHeaderCode
-#if PY_VERSION_HEX < 0x030D0000
-#define PyUnicode_AsUTF8(arg) PyUnicode_AsUTF8AndSize(arg, nullptr)
-#endif
-%End
-
 class AbstractAspect : QObject
 {
 %TypeHeaderCode
@@ -307,11 +301,11 @@ class Table : MyWidget
             sipIsErr = 1;                                                                          \
             PyErr_Format(PyExc_TypeError, "Column argument must be either int or string.");        \
         } else {                                                                                   \
-            col = sipCpp->colNames().indexOf(PyUnicode_AsUTF8(tmp));                               \
+            col = sipCpp->colNames().indexOf(PyUnicode_AsUTF8AndSize(tmp, nullptr));                               \
             if (col < 0) {                                                                         \
                 sipIsErr = 1;                                                                      \
                 PyErr_Format(PyExc_ValueError, "There's no column named%s in table%s!",            \
-                             PyUnicode_AsUTF8(tmp), sipCpp->name().toUtf8().constData());          \
+                             PyUnicode_AsUTF8AndSize(tmp, nullptr), sipCpp->name().toUtf8().constData());          \
                 Py_DECREF(tmp);                                                                    \
             }                                                                                      \
         }                                                                                          \
@@ -451,7 +445,7 @@ public:
     for (int i = 0; i < n; i++) {
         PyObject *str = PyObject_Str(PyTuple_GetItem(a0, i));
         if (str) {
-            cols << sipCpp->column(PyUnicode_AsUTF8(str));
+            cols << sipCpp->column(PyUnicode_AsUTF8AndSize(str, nullptr));
             Py_DECREF(str);
         } else {
             sipIsErr = 1;
@@ -1241,7 +1235,7 @@ public:
     for (int i = 0; i < n; i++) {
         PyObject *str = PyObject_Str(PyTuple_GetItem(a1, i));
         if (str) {
-            l << PyUnicode_AsUTF8(str);
+            l << PyUnicode_AsUTF8AndSize(str, nullptr);
             Py_DECREF(str);
         } else {
             sipIsErr = 1;
@@ -1574,7 +1568,7 @@ public:
     QStringList l;
     const char *item;
     for (int i = 0; i < PyTuple_Size(a0); i++)
-        if ((item = PyUnicode_AsUTF8(PyTuple_GetItem(a0, i))))
+        if ((item = PyUnicode_AsUTF8AndSize(PyTuple_GetItem(a0, i), nullptr)))
             l << item;
         else
             sipIsErr = 1;
