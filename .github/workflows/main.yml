@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.14'
           check-latest: true
 
       - name: Restore cached Qt
@@ -170,7 +170,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.14'
           check-latest: true
 
       - name: Restore cached Qt
