@@ -387,11 +387,11 @@ jobs:
         run: |
           brew list -1 | grep python | while read formula; do brew unlink $formula; brew link --overwrite $formula; done
           brew update
-          brew install --display-times muparser liborigin gsl gl2ps googletest ccache
+          brew install --display-times muparser liborigin gsl gl2ps googletest ccache pyqt-builder sip numpy
           if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
-            brew install qwt-qt5
+            brew install qwt-qt5 pyqt5
           else
-            brew install qwt
+            brew install qwt pyqt
           fi
 
       - name: Restore/Cache Build Directory
@@ -404,14 +404,16 @@ jobs:
       - name: Configuring
         run: |
           if [[ "${{ matrix.QT_VER }}" == "5" ]]; then
-            export PATH=$(brew --prefix)/opt/qt@5/bin:$PATH
+            export PATH=$(brew --prefix)/opt/qt@5/bin:$(brew --prefix)/opt/python@3.14/bin:$PATH
             QWT_PATH=$(brew --prefix)/opt/qwt-qt5
           fi
           cmake \
             --preset macos \
             -DCMAKE_PREFIX_PATH=${QWT_PATH} \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=${{ matrix.macos_ver }}
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=${{ matrix.macos_ver }} \
+            -DPython3_FIND_FRAMEWORK=LAST \
+            -DMAKHBER_SCRIPTING_PYTHON=ON
 
       - name: Building
         run: |
