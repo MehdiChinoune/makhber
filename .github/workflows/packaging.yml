@@ -356,8 +356,8 @@ jobs:
           files: build/Makhber*.AppImage
 
   DEB:
-    name: Ubuntu 22.04 DEB
-    runs-on: ubuntu-22.04
+    name: Ubuntu 24.04 DEB
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v5
@@ -399,7 +399,7 @@ jobs:
         run: |
           cd build
           cpack -G DEB
-          mv Makhber*.deb Makhber_$(git describe --tags)~22.04_amd64.deb
+          mv Makhber*.deb Makhber_$(git describe --tags)~24.04_amd64.deb
 
       - name: Upload Debian package
         uses: softprops/action-gh-release@v2
