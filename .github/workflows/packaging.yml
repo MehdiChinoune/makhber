@@ -208,16 +208,20 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y --no-install-recommends \
-            flatpak-builder \
-            elfutils
+            flatpak \
+            elfutils \
+            dbus-x11
+          sudo flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak install --user -y org.kde.Platform//5.15-25.08 org.kde.Sdk//5.15-25.08
+          sudo flatpak install -y org.kde.Platform//5.15-25.08 org.kde.Sdk//5.15-25.08
+          flatpak install --user -y org.flatpak.Builder
 
       - name: Building
         run: |
+          eval "$(dbus-launch --sh-syntax)"
           mkdir build 
           cd build
-          flatpak-builder \
+          flatpak run org.flatpak.Builder \
             --repo=repo \
             --install-deps-from=flathub \
             --user \
