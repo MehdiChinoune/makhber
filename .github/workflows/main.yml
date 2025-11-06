@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-Qt-${{ env.QT_VER }}-Cache
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VER }}
           cache: ${{ steps.cache-qt.outputs.cache-hit }}
@@ -46,7 +46,7 @@ jobs:
             libxkbcommon-x11-0 \
             xvfb
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
 
@@ -83,7 +83,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -95,7 +95,7 @@ jobs:
           key: ${{ runner.os }}-Qt-${{ env.QT_VER }}-Cache
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VER }}
           cache: ${{ steps.cache-qt.outputs.cache-hit }}
@@ -116,7 +116,7 @@ jobs:
           git pull origin master
           vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
 
@@ -157,7 +157,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -169,7 +169,7 @@ jobs:
           key: ${{ runner.os }}-Qt-${{ env.QT_VER }}-Cache
 
       - name: Install Qt
-        uses: jurplel/install-qt-action@v3
+        uses: jurplel/install-qt-action@v4
         with:
           setup-python: false
           version: ${{ env.QT_VER }}
