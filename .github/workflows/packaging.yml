@@ -134,7 +134,7 @@ jobs:
 
       - name: Configuring
         run: |
-          export PATH=/usr/local/opt/qt@5/bin:$PATH
+          export PATH=$(brew --prefix)/opt/qt@5/bin:$PATH
           mkdir build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release

@@ -161,33 +161,19 @@ jobs:
         with:
           submodules: true
 
-      - name: Restore cached Qt
-        id: cache-qt
-        uses: actions/cache@v4
-        with:
-          path: ${{ github.workspace }}/Qt
-          key: ${{ runner.os }}-Qt-${{ env.QT_VER }}-Cache
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          setup-python: false
-          version: ${{ env.QT_VER }}
-          cache: ${{ steps.cache-qt.outputs.cache-hit }}
-          dir: ${{ github.workspace }}/Qt
-          archives: qtbase qtsvg qttools qttranslations
-
       - name: Install prerequisties
         run: |
           brew list -1 | grep python | while read formula; do brew unlink $formula; brew link --overwrite $formula; done
           brew update
-          brew install --display-times muparser liborigin gsl gl2ps googletest
+          brew install --display-times qt@5 muparser liborigin gsl gl2ps googletest
 
       - name: Configuring
         run: |
-          mkdir build && cd build
-          cmake .. \
-            -DMAKHBER_BUILD_TESTS=ON
+          export PATH=$(brew --prefix)/opt/qt@5/bin:$PATH
+          cmake \
+            -DMAKHBER_BUILD_TESTS=ON \
+            -Bbuild \
+            -S.
 
       - name: Building
         run: |
