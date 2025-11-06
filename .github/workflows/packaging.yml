@@ -111,8 +111,12 @@ jobs:
             build/Makhber*.exe
 
   macos:
-    runs-on: macos-13
-    name: macos
+    runs-on: macos-${{ matrix.macos_ver }}
+    name: macos-${{ matrix.macos_ver }}
+    strategy:
+      fail-fast: false
+      matrix:
+        macos_ver: [14, 15-intel]
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
 
