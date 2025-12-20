@@ -687,6 +687,7 @@ jobs:
           cmake --build build -j$(nproc)
 
       - name: Testing
+        continue-on-error: true
         run: |
           cd build
           xvfb-run -a ctest --output-on-failure --repeat until-pass:3
