@@ -503,10 +503,11 @@ if( MAKHBER_SCRIPTING_PYTHON )
     DESTINATION "${PYTHON_INSTALL_PATH}"
   )
 
+  file(TO_CMAKE_PATH ${Python3_EXECUTABLE} Python3_EXECUTABLE_CMAKE)
   if( MAKHBER_BUNDLE_PYQT )
     install( CODE
       "execute_process(
-        COMMAND ${Python3_EXECUTABLE} -m pip install
+        COMMAND ${Python3_EXECUTABLE_CMAKE} -m pip install
           pyqt${QT_VERSION_MAJOR}
           pyqt${QT_VERSION_MAJOR}-sip
           --no-deps
@@ -518,9 +519,10 @@ if( MAKHBER_SCRIPTING_PYTHON )
 
   if( MSVC )
     include( PythonEmbedHashes.cmake )
+    string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} CMAKE_SYSTEM_PROCESSOR_LOWER)
     install( CODE
       "file( DOWNLOAD
-        https://www.python.org/ftp/python/${Python3_VERSION}/python-${Python3_VERSION}-embed-amd64.zip
+        https://www.python.org/ftp/python/${Python3_VERSION}/python-${Python3_VERSION}-embed-${CMAKE_SYSTEM_PROCESSOR_LOWER}.zip
         python_embed.zip
         SHOW_PROGRESS
         EXPECTED_HASH MD5=${PYTHON_EMBED_HASH}
