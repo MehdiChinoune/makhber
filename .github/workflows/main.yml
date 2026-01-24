@@ -154,27 +154,28 @@ jobs:
           - os_ver: "2025"
             QT_VER: "5.15.2"
             QT_DEPLOY_API: OFF
-            triplet: x64-windows
+            arch: x64
           - os_ver: "2025"
             QT_VER: "6.10.2"
             QT_DEPLOY_API: ON
-            triplet: x64-windows
+            arch: x64
           - os_ver: "2025"
             QT_VER: "6.10.2"
             QT_DEPLOY_API: OFF
-            triplet: x64-windows
+            arch: x64
           - os_ver: "11-arm"
             QT_VER: "6.10.2"
             QT_DEPLOY_API: ON
-            triplet: arm64-windows
+            arch: arm64
           - os_ver: "11-arm"
             QT_VER: "6.10.2"
             QT_DEPLOY_API: OFF
-            triplet: arm64-windows
+            arch: arm64
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
-      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.arch }}-windows
       QWT_VER: 6.3.0
+      CCACHE_DIR: build/ccache
 
     steps:
       - name: Get Processor Info
@@ -214,8 +215,11 @@ jobs:
           path: ${{ github.workspace }}/Qwt
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}
 
-      - uses: ilammy/msvc-dev-cmd@v1
-        if: steps.cache-qwt.outputs.cache-hit != 'true'
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
       - name: Build and install Qwt
         if: steps.cache-qwt.outputs.cache-hit != 'true'
         run: |
@@ -256,10 +260,22 @@ jobs:
             pip install pyqt6
           }
 
+      - name: Install ccache
+        run: |
+          choco install ccache --no-progress
+
+      - name: Restore/Cache Build Directory
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ runner.os }}-${{ matrix.QT_VER }}-${{ github.sha }}
+          restore-keys: build-${{ runner.os }}-${{ matrix.QT_VER }}-
+
       - name: Configuring
         run: |
           cmake `
             --preset msvc-vcpkg `
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `

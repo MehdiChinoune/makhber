@@ -19,7 +19,7 @@
         "name": "msvc-vcpkg",
         "inherits": "default",
         "binaryDir": "${sourceDir}/build/MSVC",
-        "generator": "Visual Studio 17 2022",
+        "generator": "Ninja",
         "toolchainFile": "$penv{VCPKG_INSTALLATION_ROOT}/scripts/buildsystems/vcpkg.cmake"
       },
       {
@@ -73,10 +73,7 @@
       },
       {
         "name": "msvc-vcpkg",
-        "configurePreset": "msvc-vcpkg",
-        "nativeToolOptions": [
-          "-maxCpuCount"
-        ]
+        "configurePreset": "msvc-vcpkg"
       },
       {
         "name": "msys2",
