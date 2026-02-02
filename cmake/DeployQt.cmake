@@ -33,7 +33,7 @@ else()
     get_filename_component(_qt_bin_dir "${_qmake_executable}" DIRECTORY)
 
     if( WIN32 )
-        find_program(WINDEPLOYQT_EXECUTABLE windeployqt HINTS "${_qt_bin_dir}" REQUIRED)
+        find_program(WINDEPLOYQT_EXECUTABLE windeployqt-qt5 windeployqt HINTS "${_qt_bin_dir}" REQUIRED)
     endif()
 
     if(APPLE)
