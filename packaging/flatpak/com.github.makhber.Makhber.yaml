@@ -1,7 +1,7 @@
 app-id: com.github.makhber.Makhber
 runtime: org.kde.Platform
 sdk: org.kde.Sdk
-runtime-version: 5.15-24.08
+runtime-version: '6.10'
 command: makhber
 finish-args:
   - --share=ipc
@@ -142,40 +142,39 @@ modules:
     cleanup:
       - '*'
 
-  - name: python3-pyqt5-sip
+  - name: python3-pyqt6-sip
     buildsystem: simple
     build-commands:
       - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "pyqt5-sip" --no-build-isolation
+        --prefix=${FLATPAK_DEST} "pyqt6-sip" --no-build-isolation
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/3c/cd/f6f957107447bc53e398f6149f55a7f335c434f201e77dcfb8a3c20dc42c/pyqt5_sip-12.16.1.tar.gz
-        sha256: 8c831f8b619811a32369d72339faa50ae53a963f5fdfa4d71f845c63e9673125
+        url: https://files.pythonhosted.org/packages/e3/7d/d2916048e2e3960f68cb4e93907639844f7b8ff95897dcc98553776ccdfc/pyqt6_sip-13.11.0.tar.gz
+        sha256: d463af37738bda1856c9ef513e5620a37b7a005e9d589c986c3304db4a8a14d3
         x-checker-data:
           type: pypi
-          name: PyQt5-sip
+          name: PyQt6-sip
 
-  - name: pyqt5
+  - name: pyqt6
     buildsystem: simple
     build-commands:
-      - sip-install --confirm-license --build-dir ./build --target-dir /app/lib/python3.12/site-packages
-        --no-designer-plugin --no-qml-plugin --no-tools --disable QtQml
-        --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable
-        QtHelp --disable QtMultimedia --disable QtMultimediaWidgets --disable QtNfc
-        --disable QtRemoteObjects --disable QtPositioning --disable QtLocation --disable
-        QtQuick --disable QtQuickWidgets --disable QtSensors --disable QtSerialPort
-        --disable QtSql --disable QtTest --disable QtTextToSpeech --disable QtWebChannel
-        --disable QtWebKit --disable QtWebKitWidgets --disable QtWebSockets --disable
-        QtX11Extras --disable QtXml --disable QtXmlPatterns --verbose --jobs $(nproc)
+      - sip-install --confirm-license --build-dir ./build --target-dir /app/lib/python3.11/site-packages
+        --no-designer-plugin --no-qml-plugin --no-tools
+        --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable QtHelp
+        --disable QtMultimedia --disable QtMultimediaWidgets --disable QtNfc --disable QtPositioning
+        --disable QtQml --disable QtQuick --disable QtQuick3D --disable QtQuickWidgets
+        --disable QtRemoteObjects --disable QtSensors --disable QtSerialPort --disable QtSql
+        --disable QtSvgWidgets --disable QtTest --disable QtWebChannel --disable QtWebSockets --disable QtXml
+        --verbose --jobs $(nproc)
     sources:
       - type: archive
-        url: https://files.pythonhosted.org/packages/0e/07/c9ed0bd428df6f87183fca565a79fee19fa7c88c7f00a7f011ab4379e77a/PyQt5-5.15.11.tar.gz
-        sha256: fda45743ebb4a27b4b1a51c6d8ef455c4c1b5d610c90d2934c7802b5c1557c52
+        url: https://files.pythonhosted.org/packages/96/03/e756f52e8b0d7bb5527baf8c46d59af0746391943bdb8655acba22ee4168/pyqt6-6.10.2.tar.gz
+        sha256: 6c0db5d8cbb9a3e7e2b5b51d0ff3f283121fa27b864db6d2f35b663c9be5cc83
         x-checker-data:
           type: pypi
-          name: PyQt5
+          name: PyQt6
     cleanup:
-      - /lib/python3.12/site-packages/PyQt5/bindings
+      - /lib/python3.12/site-packages/PyQt6/bindings
 
   - name: makhber
     buildsystem: cmake-ninja

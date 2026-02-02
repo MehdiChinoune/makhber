@@ -47,7 +47,7 @@ jobs:
       matrix:
         QT_VER: [5.15.2, 6.10.2]
     env:
-      VCPKG_BINARY_SOURCES: "clear;nuget,GitHub,readwrite"
+      VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: x64-windows
       QWT_VER: 6.3.0
 
@@ -282,7 +282,7 @@ jobs:
             flatpak-builder \
             elfutils
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak install --user -y org.kde.Platform//5.15-24.08 org.kde.Sdk//5.15-24.08
+          flatpak install --user -y org.kde.Platform//6.10 org.kde.Sdk//6.10
 
       - name: Building
         run: |
@@ -330,7 +330,7 @@ jobs:
       matrix:
         QT_VER: [5.15.2, 6.10.2]
     env:
-      VCPKG_BINARY_SOURCES: "clear;nuget,GitHub,readwrite"
+      VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: x64-linux
       QWT_VER: 6.3.0
       PYTHON_VERSION: "3.13"
