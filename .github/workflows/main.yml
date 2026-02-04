@@ -228,7 +228,7 @@ jobs:
           cd $Env:VCPKG_INSTALLATION_ROOT
           git pull origin master
           .\bootstrap-vcpkg.bat
-          vcpkg install zlib gsl muparser liborigin opengl gtest pkgconf
+          vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
 
       - name: Install Python packages
         run: |
