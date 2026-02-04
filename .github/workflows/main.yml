@@ -235,6 +235,7 @@ jobs:
           vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
           if ("${{ matrix.QT_VER }}" -eq "5.15"){
             vcpkg install qt5-tools
+            vcpkg install qwt-qt5 --overlay-ports=$Env:GITHUB_WORKSPACE\packaging\vcpkg-overlay-ports\qwt-qt5
           }
 
       - name: Install PyQt
