@@ -15,7 +15,7 @@ jobs:
         run : lscpu | grep name
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
           fetch-depth: 0
@@ -38,7 +38,7 @@ jobs:
           tree /snap/makhber/current/usr
 
       - name: Upload snap
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: snap
           path: '*.snap'
@@ -49,7 +49,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -86,7 +86,7 @@ jobs:
             com.github.makhber.Makhber
 
       - name: Upload flatpak
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: flatpak
           path: build/Makhber*.flatpak
@@ -118,20 +118,21 @@ jobs:
         run : lscpu | grep name
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
           fetch-depth: 0
 
       # Python version used to build makhber must be the same for miniconda
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '${{ env.PYTHON_VERSION }}'
+          pip-install: sip pyqt-builder
           check-latest: true
 
       - name: Restore cached Qt
         id: cache-qt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.QT_VER }}-Cache
@@ -161,7 +162,6 @@ jobs:
               libvulkan-dev \
               libcups2-dev
           fi
-          pip3 install sip pyqt-builder
           if [[ "${{ matrix.QT_VER }}" == "5.15.2" ]]; then
             pip3 install pyqt5
           else
@@ -174,7 +174,7 @@ jobs:
 
       - name: Restore cached Qwt
         id: cache-qwt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qwt
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.QT_VER }}-gcc-${{ steps.gcc-version.outputs.gcc_version }}
@@ -246,7 +246,7 @@ jobs:
             --custom-apprun=../packaging/appimage/AppRun
 
       - name: Upload AppImage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: Appimage-${{ matrix.QT_VER }}
           path: build/Makhber-*.AppImage
@@ -259,7 +259,7 @@ jobs:
       - name: Get Processor Info
         run : lscpu | grep name
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -315,7 +315,7 @@ jobs:
           dpkg -c build/*.deb
 
       - name: Upload DEB package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: DEB-ubuntu
           path: build/*.deb
@@ -462,7 +462,7 @@ jobs:
           rpm -ql makhber
 
       - name: Upload RPM package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: RPM-opensuse-${{ matrix.image }}-${{ matrix.QT_VER }}
           path: build/*.rpm
@@ -535,7 +535,7 @@ jobs:
           dpkg -c build/*.deb
 
       - name: Upload DEB package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: DEB-ubuntu-devel
           path: build/*.deb
@@ -635,7 +635,7 @@ jobs:
           dpkg -c build/*.deb
 
       - name: Upload DEB package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: DEB-debian-exp-${{ matrix.QT_VER }}
           path: build/*.deb

@@ -32,18 +32,19 @@ jobs:
           lscpu | grep name
           nproc
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
+          pip-install: sip pyqt-builder numpy
           check-latest: true
 
       - name: Restore cached Qt
         id: cache-qt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-Cache
@@ -86,7 +87,7 @@ jobs:
 
       - name: Restore cached Qwt
         id: cache-qwt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qwt
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-gcc-${{ steps.gcc-version.outputs.gcc_version }}
@@ -105,9 +106,8 @@ jobs:
           make -j$(nproc)
           make install
 
-      - name: Install Python packages
+      - name: Install PyQt
         run: |
-          pip3 install sip pyqt-builder numpy
           if [[ "${{ matrix.QT_VER }}" == "5.15.2" ]]; then
             pip3 install pyqt5
           else
@@ -115,7 +115,7 @@ jobs:
           fi
 
       - name: Restore/Cache Build Directory
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: build
           key: build-${{ runner.os }}-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-${{ github.sha }}
@@ -164,18 +164,19 @@ jobs:
         run : |
           Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
+          pip-install: sip pyqt-builder numpy
           check-latest: true
 
       - name: Restore cached Qt
         id: cache-qt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-Cache
@@ -191,7 +192,7 @@ jobs:
 
       - name: Restore cached Qwt
         id: cache-qwt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qwt
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}
@@ -230,9 +231,8 @@ jobs:
           .\bootstrap-vcpkg.bat
           vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
 
-      - name: Install Python packages
+      - name: Install PyQt
         run: |
-          pip install sip pyqt-builder numpy
           if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
             pip install pyqt5
           } else {
@@ -299,7 +299,7 @@ jobs:
         run : |
           Get-CIMInstance -Class Win32_Processor | Select-Object -Property Name
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -311,7 +311,7 @@ jobs:
           install: pactoys make
 
       - name: Restore/Cache packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}
           key: ${{ matrix.msystem }}-${{ matrix.QT_VER }}-${{ github.sha }}
@@ -340,7 +340,7 @@ jobs:
           pacman -Sc --noconfirm --cachedir $(cygpath "${{ github.workspace }}/${{ matrix.msystem }}-${{ matrix.QT_VER }}")
 
       - name: Restore/Cache Build Directory
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: build
           key: build-${{ matrix.msystem }}-${{ matrix.QT_VER }}-${{ github.sha }}
@@ -379,7 +379,7 @@ jobs:
           sysctl -n machdep.cpu.brand_string
           sysctl -n hw.logicalcpu
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -395,7 +395,7 @@ jobs:
           fi
 
       - name: Restore/Cache Build Directory
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: build
           key: build-${{ runner.os }}-${{ matrix.macos_ver }}-${{ matrix.QT_VER }}-${{ github.sha }}

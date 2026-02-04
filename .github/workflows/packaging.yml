@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -53,18 +53,19 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
+          pip-install: sip pyqt-builder
           check-latest: true
 
       - name: Restore cached Qt
         id: cache-qt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.QT_VER }}-Cache
@@ -80,7 +81,7 @@ jobs:
 
       - name: Restore cached Qwt
         id: cache-qwt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qwt
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.QT_VER }}
@@ -119,9 +120,8 @@ jobs:
           Add-Content $Env:VCPKG_INSTALLATION_ROOT\triplets\$Env:VCPKG_DEFAULT_TRIPLET.cmake "set(VCPKG_BUILD_TYPE release)"
           vcpkg install zlib gsl muparser liborigin opengl gl2ps openssl pkgconf
 
-      - name: Install Python packages
+      - name: Install PyQt
         run: |
-          pip3 install sip pyqt-builder
           if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
             pip install pyqt5
           } else {
@@ -179,7 +179,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -227,7 +227,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -249,7 +249,7 @@ jobs:
           draft: true
           files: ${{ steps.snap_build.outputs.snap }}
 
-      - uses: snapcore/action-publish@v1
+      - uses: canonical/action-publish@v1
         if: ${{ github.repository_owner == 'Makhber' }}
         with:
           store_login: ${{ secrets.SNAP_STORE_LOGIN }}
@@ -270,7 +270,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
@@ -340,19 +340,20 @@ jobs:
         run : lscpu | grep name
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: true
 
       # Python version used to build makhber must be the same for miniconda
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '${{ env.PYTHON_VERSION }}'
+          pip-install: sip pyqt-builder
           check-latest: true
 
       - name: Restore cached Qt
         id: cache-qt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.QT_VER }}-Cache
@@ -381,7 +382,6 @@ jobs:
               libxcb-cursor0 \
               libvulkan-dev
           fi
-          pip3 install sip pyqt-builder
           if [[ "${{ matrix.QT_VER }}" == "5.15.2" ]]; then
             pip3 install pyqt5
           else
@@ -394,7 +394,7 @@ jobs:
 
       - name: Restore cached Qwt
         id: cache-qwt
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ github.workspace }}/Qwt
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.QT_VER }}-gcc-${{ steps.gcc-version.outputs.gcc_version }}
@@ -482,7 +482,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: true
 
