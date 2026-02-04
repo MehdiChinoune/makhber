@@ -19,9 +19,9 @@ jobs:
           - os_ver: "24.04"
             QT_VER: "5.15.2"
           - os_ver: "24.04"
-            QT_VER: "6.10.1"
+            QT_VER: "6.10.2"
           - os_ver: "24.04-arm"
-            QT_VER: "6.10.1"
+            QT_VER: "6.10.2"
     env:
       QWT_VER: 6.3.0
       CCACHE_DIR: build/ccache
@@ -149,10 +149,10 @@ jobs:
             QT_VER: "5.15.2"
             triplet: x64-windows
           - os_ver: "2025"
-            QT_VER: "6.10.1"
+            QT_VER: "6.10.2"
             triplet: x64-windows
           - os_ver: "11-arm"
-            QT_VER: "6.10.1"
+            QT_VER: "6.10.2"
             triplet: arm64-windows
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
