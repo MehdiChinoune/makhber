@@ -520,12 +520,17 @@ if( MAKHBER_SCRIPTING_PYTHON )
   if( MSVC )
     include( PythonEmbedHashes.cmake )
     string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} CMAKE_SYSTEM_PROCESSOR_LOWER)
+    if(Python3_VERSION VERSION_GREATER_EQUAL 3.14.3)
+      set(ALGORITHM "SHA256")
+    else()
+      set(ALGORITHM "MD5")
+    endif()
     install( CODE
       "file( DOWNLOAD
         https://www.python.org/ftp/python/${Python3_VERSION}/python-${Python3_VERSION}-embed-${CMAKE_SYSTEM_PROCESSOR_LOWER}.zip
         python_embed.zip
         SHOW_PROGRESS
-        EXPECTED_HASH MD5=${PYTHON_EMBED_HASH}
+        EXPECTED_HASH ${ALGORITHM}=${PYTHON_EMBED_HASH}
       )
       file( ARCHIVE_EXTRACT
         INPUT python_embed.zip
