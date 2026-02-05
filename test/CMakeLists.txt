@@ -45,12 +45,17 @@ file( COPY ${TestDataFiles} DESTINATION . )
 
 if( NOT (MAKHBER_SEARCH_FOR_UPDATES OR MAKHBER_DOWNLOAD_LINKS) )
 
-  set( menu_files defaultMenus_en.menudat appWithGraphen.menudat )
+  set( menu_files defaultMenus_en.menudat )
+  if( MAKHBER_SCRIPTING_PYTHON )
+    list( APPEND menu_files appWithGraphen.menudat )
+  endif()
+
+  find_program(DIFF_COMMAND diff REQUIRED)
 
   foreach( menu ${menu_files} )
     get_filename_component( test_name ${menu} NAME_WLE )
     add_test( NAME menuData_${test_name}
-      COMMAND diff -q ${menu} ${CMAKE_CURRENT_SOURCE_DIR}/menuData/${menu}
+      COMMAND ${DIFF_COMMAND} -u ${menu} ${CMAKE_CURRENT_SOURCE_DIR}/menuData/${menu}
       )
     set_tests_properties( menuData_${test_name} PROPERTIES DEPENDS unittests )
   endforeach()
