@@ -25,6 +25,8 @@ jobs:
     env:
       QWT_VER: 6.3.0
       CCACHE_DIR: build/ccache
+      CC: clang-20
+      CXX: clang++-20
 
     steps:
       - name: Get Processor Info
@@ -49,20 +51,12 @@ jobs:
           path: ${{ github.workspace }}/Qt
           key: ${{ runner.os }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-Cache
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          setup-python: false
-          version: ${{ matrix.QT_VER }}
-          cache: ${{ steps.cache-qt.outputs.cache-hit }}
-          dir: ${{ github.workspace }}/Qt
-          archives: qtbase qtsvg qttools qttranslations icu
-
       - name: Install prerequisties
         run: |
           sudo apt update
           sudo apt install -y --no-install-recommends \
             ccache \
+            clang-20 \
             libglu1-mesa-dev \
             libmuparser-dev \
             libgsl-dev \
@@ -79,6 +73,15 @@ jobs:
               libvulkan-dev \
               libcups2-dev
           fi
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          setup-python: false
+          version: ${{ matrix.QT_VER }}
+          cache: ${{ steps.cache-qt.outputs.cache-hit }}
+          dir: ${{ github.workspace }}/Qt
+          archives: qtbase qtsvg qttools qttranslations icu
 
       - name: Get GCC version
         id: gcc-version
@@ -243,6 +246,7 @@ jobs:
         run: |
           cmake `
             --preset msvc-vcpkg `
+            -T ClangCl `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
