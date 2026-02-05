@@ -231,6 +231,8 @@ public Q_SLOTS:
     void selectAllTable();
     void deselect();
     void clear();
+    void selectColumn(int col) { d_view_widget->selectColumn(col); };
+    void selectRow(int row) { d_view_widget->selectRow(row); };
     //@}
 
     void init();
@@ -271,11 +273,23 @@ public Q_SLOTS:
     void saveColumnTypes(QJsonObject *);
     //@}
 
+    QColor backgroundColor() { return d_view_widget->palette().window().color(); };
     void setBackgroundColor(const QColor &col);
+
     void setTextColor(const QColor &col);
-    void setHeaderColor(const QColor &col);
+    QColor textColor() { return d_view_widget->palette().windowText().color(); };
+
     void setTextFont(const QFont &fnt);
+    QFont textFont() { return d_view_widget->font(); };
+
+    void setHeaderColor(const QColor &col);
+    QColor headerColor()
+    {
+        return d_view_widget->horizontalHeader()->palette().windowText().color();
+    };
+
     void setHeaderFont(const QFont &fnt);
+    QFont headerFont() { return d_view_widget->horizontalHeader()->font(); };
 
     int verticalHeaderWidth();
 

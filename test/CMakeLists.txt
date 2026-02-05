@@ -8,6 +8,7 @@ set( SRCS
   "fft.cpp"
   "menus.cpp"
   "readWriteProject.cpp"
+  "Table.cpp"
   "main.cpp"
   )
 if( QT_VERSION_MAJOR VERSION_LESS 6 )
@@ -40,6 +41,7 @@ set( TestDataFiles
   "testProject.mkbr"
   "Histo.opj"
   "USstates.opj"
+  "ascii_table.txt"
   )
 file( COPY ${TestDataFiles} DESTINATION . )
 
