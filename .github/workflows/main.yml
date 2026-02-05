@@ -145,10 +145,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os_ver: "2025"
+          - os_ver: "2025-vs2026"
             QT_VER: "5.15.2"
             triplet: x64-windows
-          - os_ver: "2025"
+          - os_ver: "2025-vs2026"
             QT_VER: "6.10.2"
             triplet: x64-windows
           - os_ver: "11-arm"
@@ -243,6 +243,7 @@ jobs:
         run: |
           cmake `
             --preset msvc-vcpkg `
+            -G"Visual Studio 18 2026" `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `

@@ -41,7 +41,7 @@ jobs:
 
   Windows:
     name: Windows
-    runs-on: windows-2025
+    runs-on: windows-2025-vs2026
     strategy:
       fail-fast: false
       matrix:
@@ -132,6 +132,7 @@ jobs:
         run: |
           mkdir build; cd build
           cmake .. `
+            -G"Visual Studio 18 2026" `
             -DCMAKE_BUILD_TYPE=Release `
             -DBUILD_SHARED_LIBS=ON `
             -DCMAKE_SYSTEM_VERSION="10.0" `
