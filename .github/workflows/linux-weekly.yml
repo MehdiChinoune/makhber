@@ -339,9 +339,9 @@ jobs:
           sudo pacman -S --noconfirm --needed \
             cmake \
             ninja \
-            qt5-base \
-            qt5-svg \
-            qt5-tools \
+            qt6-base \
+            qt6-svg \
+            qt6-tools \
             glu \
             gsl \
             muparser \
@@ -349,7 +349,7 @@ jobs:
             qwt \
             gl2ps \
             sip \
-            python-pyqt5 \
+            python-pyqt6 \
             pyqt-builder \
             gtest \
             xorg-server-xvfb
