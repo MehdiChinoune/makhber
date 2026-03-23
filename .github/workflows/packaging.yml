@@ -45,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        QT_VER: [5.15.2, 6.10]
+        QT_VER: [5.15.2, 6.12.0]
     env:
       VCPKG_BINARY_SOURCES: "clear;nuget,GitHub,readwrite"
       VCPKG_DEFAULT_TRIPLET: x64-windows
@@ -63,16 +63,10 @@ jobs:
           pip-install: sip!=6.16.1 pyqt-builder
           check-latest: true
 
-      - name: Restore cached Qt
-        id: cache-qt
-        uses: actions/cache@v5
-        with:
-          path: ${{ github.workspace }}/Qt
-          key: ${{ runner.os }}-Qt-${{ matrix.QT_VER }}-Cache
-
       - name: Install Qt
-        uses: jurplel/install-qt-action@v4
+        uses: jdpurcell/install-qt-action@v5
         with:
+          use-naqt: true
           setup-python: false
           version: ${{ matrix.QT_VER }}
           cache: ${{ steps.cache-qt.outputs.cache-hit }}
@@ -125,7 +119,7 @@ jobs:
           if ("${{ matrix.QT_VER }}" -eq "5.15.2") {
             pip install pyqt5
           } else {
-            pip install pyqt6==${{ matrix.QT_VER }}.*
+            pip install pyqt6
           }
 
       - name: Configuring
@@ -325,7 +319,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        QT_VER: [5.15.2, 6.11]
+        QT_VER: [5.15.2, 6.12.0]
     env:
       VCPKG_BINARY_SOURCES: "clear;nuget,GitHub,readwrite"
       VCPKG_DEFAULT_TRIPLET: x64-linux
@@ -348,16 +342,10 @@ jobs:
           pip-install: sip!=6.16.1 pyqt-builder
           check-latest: true
 
-      - name: Restore cached Qt
-        id: cache-qt
-        uses: actions/cache@v5
-        with:
-          path: ${{ github.workspace }}/Qt
-          key: ${{ runner.os }}-Qt-${{ matrix.QT_VER }}-Cache
-
       - name: Install Qt
-        uses: jurplel/install-qt-action@v4
+        uses: jdpurcell/install-qt-action@v5
         with:
+          use-naqt: true
           setup-python: false
           version: ${{ matrix.QT_VER }}
           cache: ${{ steps.cache-qt.outputs.cache-hit }}
