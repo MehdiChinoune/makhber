@@ -562,14 +562,9 @@ jobs:
         run: |
           apt update
           apt install -y --no-install-recommends ca-certificates
-          if [ "${{ matrix.QT_VER }}" = "6" ]; then
-            echo "deb https://deb.debian.org/debian experimental main" | tee /etc/apt/sources.list.d/experimental.list
-            _experimental="-t experimental"
-          fi
           apt update
           if [ "${{ matrix.QT_VER }}" = "6" ]; then
             apt install -y --no-install-recommends \
-              ${_experimental} \
               qt6-base-dev \
               qt6-svg-dev \
               qt6-tools-dev \
@@ -585,7 +580,6 @@ jobs:
               qttranslations5-l10n
           fi
           apt install -y --no-install-recommends \
-            ${_experimental} \
             g++ \
             cmake \
             ninja-build \
