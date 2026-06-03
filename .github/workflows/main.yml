@@ -139,21 +139,24 @@ jobs:
           xvfb-run -a ctest --preset default --repeat until-pass:3
 
   MSVC:
-    name: MSVC 2022
+    name: ${{ matrix.generator }} + Qt-${{ matrix.QT_VER }} (Windows-${{ matrix.os_ver }})
     runs-on: windows-${{ matrix.os_ver }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os_ver: "2025"
+          - os_ver: "2022"
             QT_VER: "5.15.2"
             triplet: x64-windows
+            generator: "Visual Studio 17 2022"
           - os_ver: "2025"
             QT_VER: "6.10"
             triplet: x64-windows
+            generator: "Visual Studio 18 2026"
           - os_ver: "11-arm"
             QT_VER: "6.11"
             triplet: arm64-windows
+            generator: "Visual Studio 17 2022"
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
@@ -243,6 +246,7 @@ jobs:
         run: |
           cmake `
             --preset msvc-vcpkg `
+            -G "${{ matrix.generator }}" `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
@@ -363,7 +367,7 @@ jobs:
 
   macos:
     runs-on: macos-${{ matrix.macos_ver }}
-    name: macos
+    name: macos-${{ matrix.macos_ver }}-Qt${{ matrix.QT_VER }}
     strategy:
       fail-fast: false
       matrix:
