@@ -180,6 +180,7 @@ jobs:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.arch }}-windows
       QWT_VER: 6.3.0
+      CCACHE_DIR: build/ccache
 
     steps:
       - name: Get Processor Info
@@ -261,11 +262,23 @@ jobs:
             pip install pyqt6==${{ matrix.QT_VER }}.*
           }
 
+      - name: Install ccache
+        run: |
+          choco install ccache --no-progress
+
+      - name: Restore/Cache Build Directory
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ runner.os }}-${{ matrix.QT_VER }}-${{ github.sha }}
+          restore-keys: build-${{ runner.os }}-${{ matrix.QT_VER }}-
+
       - name: Configuring
         run: |
           cmake `
             --preset msvc-vcpkg `
             -G "${{ matrix.generator }}" `
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
             -DPython3_ROOT_DIR=${{ env.pythonLocation }} `
