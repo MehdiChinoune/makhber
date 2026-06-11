@@ -16,11 +16,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os_ver: "24.04"
+          - os_ver: "26.04"
             QT_VER: "5.15.2"
-          - os_ver: "24.04"
+          - os_ver: "26.04"
             QT_VER: "6.11"
-          - os_ver: "24.04-arm"
+          - os_ver: "26.04-arm"
             QT_VER: "6.11"
     env:
       QWT_VER: 6.3.0

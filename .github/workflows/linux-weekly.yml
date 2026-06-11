@@ -7,7 +7,7 @@ on:
 
 jobs:
   Snap:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     name: Snap
 
     steps:
@@ -39,7 +39,7 @@ jobs:
           path: ${{ steps.snap_build.outputs.snap }}
 
   Flatpak:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-26.04
     name: Flatpak
 
     steps:
@@ -50,7 +50,6 @@ jobs:
 
       - name: Install prerequisties
         run: |
-          sudo add-apt-repository -y ppa:flatpak/stable
           sudo apt update
           sudo apt install -y --no-install-recommends \
             flatpak-builder \
@@ -247,8 +246,8 @@ jobs:
           path: build/Makhber-*.AppImage
 
   Ubuntu:
-    name: Ubuntu 22.04
-    runs-on: ubuntu-22.04
+    name: Ubuntu 24.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Get Processor Info
@@ -317,7 +316,7 @@ jobs:
 
   Arch:
     name: ArchLinux
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     container: archlinux:base-devel
 
     steps:
@@ -371,7 +370,7 @@ jobs:
 
   OpenSUSE:
     name: OpenSUSE ${{ matrix.image }} - Qt${{ matrix.QT_VER }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     container: opensuse/${{ matrix.image }}
     strategy:
       fail-fast: false
@@ -464,7 +463,7 @@ jobs:
 
   Ubuntu-devel:
     name: Ubuntu Devel
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     container: ubuntu:devel
 
     steps:
@@ -537,7 +536,7 @@ jobs:
 
   Debian-unstable:
     name: Debian unstable - Qt${{ matrix.QT_VER }}
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     container: debian:unstable
     strategy:
       fail-fast: false
@@ -631,7 +630,7 @@ jobs:
 
   Alpine:
     name: Alpine
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     container: alpine:latest
 
     steps:
