@@ -145,7 +145,7 @@ jobs:
           xvfb-run -a ctest --preset default --repeat until-pass:3
 
   MSVC:
-    name: Windows-${{ matrix.os_ver }} + Qt-${{ matrix.QT_VER }}
+    name: Windows-${{ matrix.os_ver }} + Qt-${{ matrix.QT_VER }} (QT_DEPLOY=${{ matrix.QT_DEPLOY_API }})
     runs-on: windows-${{ matrix.os_ver }}
     strategy:
       fail-fast: false
@@ -154,12 +154,23 @@ jobs:
           - os_ver: "2022"
             QT_VER: "5.15.2"
             arch: x64
+            QT_DEPLOY_API: OFF
           - os_ver: "2025"
             QT_VER: "6.10"
             arch: x64
+            QT_DEPLOY_API: ON
+          - os_ver: "2025"
+            QT_VER: "6.10"
+            arch: x64
+            QT_DEPLOY_API: OFF
           - os_ver: "11-arm"
             QT_VER: "6.11"
             arch: arm64
+            QT_DEPLOY_API: ON
+          - os_ver: "11-arm"
+            QT_VER: "6.11"
+            arch: arm64
+            QT_DEPLOY_API: OFF
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.arch }}-windows
@@ -259,7 +270,8 @@ jobs:
             -DPython3_EXECUTABLE=${{ env.pythonLocation }}/python3.exe `
             -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\Qwt" `
             -DRUNTIME_DIRS="$Env:VCPKG_INSTALLATION_ROOT/installed/$Env:VCPKG_DEFAULT_TRIPLET/bin;$Env:GITHUB_WORKSPACE\Qwt\lib;$Env:Qt5_DIR\bin;$Env:Qt6_DIR\bin" `
-            -DBUILD_SHARED_LIBS=ON
+            -DBUILD_SHARED_LIBS=ON `
+            -DMAKHBER_USE_QT_CMAKE_DEPLOY_API=${{ matrix.QT_DEPLOY_API }}
 
       - name: Building
         run: |
