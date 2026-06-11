@@ -145,7 +145,7 @@ jobs:
           xvfb-run -a ctest --preset default --repeat until-pass:3
 
   MSVC:
-    name: ${{ matrix.generator }} + Qt-${{ matrix.QT_VER }} (Windows-${{ matrix.os_ver }})
+    name: Windows-${{ matrix.os_ver }} + Qt-${{ matrix.QT_VER }} (QT_DEPLOY=${{ matrix.QT_DEPLOY_API }})
     runs-on: windows-${{ matrix.os_ver }}
     strategy:
       fail-fast: false
@@ -153,27 +153,22 @@ jobs:
         include:
           - os_ver: "2022"
             QT_VER: "5.15.2"
-            generator: "Visual Studio 17 2022"
             arch: x64
             QT_DEPLOY_API: OFF
           - os_ver: "2025"
             QT_VER: "6.10"
-            generator: "Visual Studio 18 2026"
             arch: x64
             QT_DEPLOY_API: ON
           - os_ver: "2025"
             QT_VER: "6.10"
-            generator: "Visual Studio 18 2026"
             arch: x64
             QT_DEPLOY_API: OFF
           - os_ver: "11-arm"
             QT_VER: "6.11"
-            generator: "Visual Studio 17 2022"
             arch: arm64
             QT_DEPLOY_API: ON
           - os_ver: "11-arm"
             QT_VER: "6.11"
-            generator: "Visual Studio 17 2022"
             arch: arm64
             QT_DEPLOY_API: OFF
     env:
@@ -220,8 +215,11 @@ jobs:
           path: ${{ github.workspace }}/Qwt
           key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}
 
-      - uses: ilammy/msvc-dev-cmd@v1
-        if: steps.cache-qwt.outputs.cache-hit != 'true'
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
       - name: Build and install Qwt
         if: steps.cache-qwt.outputs.cache-hit != 'true'
         run: |
@@ -277,7 +275,6 @@ jobs:
         run: |
           cmake `
             --preset msvc-vcpkg `
-            -G "${{ matrix.generator }}" `
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache `
             -DCMAKE_BUILD_TYPE=RelWithDebInfo `
             -DCMAKE_SYSTEM_VERSION="10.0" `
