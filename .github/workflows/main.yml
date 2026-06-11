@@ -147,19 +147,19 @@ jobs:
         include:
           - os_ver: "2022"
             QT_VER: "5.15.2"
-            triplet: x64-windows
             generator: "Visual Studio 17 2022"
+            arch: x64
           - os_ver: "2025"
             QT_VER: "6.10"
-            triplet: x64-windows
             generator: "Visual Studio 18 2026"
+            arch: x64
           - os_ver: "11-arm"
             QT_VER: "6.11"
-            triplet: arm64-windows
             generator: "Visual Studio 17 2022"
+            arch: arm64
     env:
       VCPKG_BINARY_SOURCES: 'clear;nuget,GitHub,readwrite'
-      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.arch }}-windows
       QWT_VER: 6.3.0
 
     steps:
