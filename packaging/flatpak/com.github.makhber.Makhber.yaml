@@ -1,7 +1,7 @@
 app-id: com.github.makhber.Makhber
 runtime: org.kde.Platform
 sdk: org.kde.Sdk
-runtime-version: 5.15-24.08
+runtime-version: 5.15-25.08
 command: makhber
 finish-args:
   - --share=ipc
@@ -98,6 +98,7 @@ modules:
     buildsystem: cmake-ninja
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_POLICY_VERSION_MINIMUM=3.5
     sources:
       - type: archive
         url: https://geuz.org/gl2ps/src/gl2ps-1.4.2.tgz
@@ -112,6 +113,20 @@ modules:
       - /include
       - /share
 
+  - name: liborigin
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+    sources:
+      - type: archive
+        url: https://downloads.sourceforge.net/project/liborigin/liborigin/3.0/liborigin-3.0.3.tar.gz
+        sha256: b394e3bf633888f9f4a3e1449d7c7eb39b778a2e657424177a04cde4afe6965a
+    cleanup:
+      - /bin/opj2dat
+      - /lib/liborigin.a
+      - /include
+      - /share
+
   - name: python3-pyqt-builder
     buildsystem: simple
     build-commands:
@@ -119,22 +134,22 @@ modules:
         --prefix=${FLATPAK_DEST} "pyqt-builder" --no-build-isolation
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/88/ef/eb23f262cca3c0c4eb7ab1933c3b1f03d021f2c48f54763065b6f0e321be/packaging-24.2-py3-none-any.whl
-        sha256: 09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759
+        url: https://files.pythonhosted.org/packages/df/b2/87e62e8c3e2f4b32e5fe99e0b86d576da1312593b39f47d8ceef365e95ed/packaging-26.2-py3-none-any.whl
+        sha256: 5fc45236b9446107ff2415ce77c807cee2862cb6fac22b8a73826d0693b0980e
         x-checker-data:
           name: packaging
           packagetype: bdist_wheel
           type: pypi
       - type: file
-        url: https://files.pythonhosted.org/packages/a2/7c/e3ff1467ac5e1e094c210a877c75dd872d9110f8e602cb7c0a4d620fd47c/PyQt_builder-1.17.0-py3-none-any.whl
-        sha256: b8ee3a078918b4e178f1d0c7a621fa161a7f46884bfa46304dcb025459039ce8
+        url: https://files.pythonhosted.org/packages/13/e8/3cdb96cd8f7f0bf4113532d5d762324dd6ea3630362ea2169f9075803a2e/pyqt_builder-1.19.1-py3-none-any.whl
+        sha256: bb8a348479c25db54aa37542fcc98b6c28bb057c9dbac07ddf2424df2084951a
         x-checker-data:
           name: PyQt_builder
           packagetype: bdist_wheel
           type: pypi
       - type: file
-        url: https://files.pythonhosted.org/packages/0b/b5/aafbb1f35d53ae590d5c0455edc0694a355c3dac22a88392421789c4edd1/sip-6.9.1-py3-none-any.whl
-        sha256: 071d8b920fdc1761330964abed829178ddb5154097b9fa4306b2fc6c6d9e57fc
+        url: https://files.pythonhosted.org/packages/0f/d9/36c6650bdb152d6089de179ceb94b71a862a0fa4af193fcf6ae09d4e2e19/sip-6.15.3-py3-none-any.whl
+        sha256: 60df2ee1d17f5375dd15f92ed6181937fea3761e094b73ddfcc550991711e007
         x-checker-data:
           name: sip
           packagetype: bdist_wheel
@@ -149,8 +164,8 @@ modules:
         --prefix=${FLATPAK_DEST} "pyqt5-sip" --no-build-isolation
     sources:
       - type: file
-        url: https://files.pythonhosted.org/packages/3c/cd/f6f957107447bc53e398f6149f55a7f335c434f201e77dcfb8a3c20dc42c/pyqt5_sip-12.16.1.tar.gz
-        sha256: 8c831f8b619811a32369d72339faa50ae53a963f5fdfa4d71f845c63e9673125
+        url: https://files.pythonhosted.org/packages/f3/31/5ef342de9faee0f3801088946ae103db9b9eaeba3d6a64fefd5ce74df244/pyqt5_sip-12.18.0.tar.gz
+        sha256: 71c37db75a0664325de149f43e2a712ec5fa1f90429a21dafbca005cb6767f94
         x-checker-data:
           type: pypi
           name: PyQt5-sip
@@ -158,7 +173,7 @@ modules:
   - name: pyqt5
     buildsystem: simple
     build-commands:
-      - sip-install --confirm-license --build-dir ./build --target-dir /app/lib/python3.12/site-packages
+      - sip-install --confirm-license --build-dir ./build --target-dir /app/lib/python3.13/site-packages
         --no-designer-plugin --no-qml-plugin --no-tools --disable QtQml
         --disable QtBluetooth --disable QtDBus --disable QtDesigner --disable
         QtHelp --disable QtMultimedia --disable QtMultimediaWidgets --disable QtNfc
@@ -175,7 +190,7 @@ modules:
           type: pypi
           name: PyQt5
     cleanup:
-      - /lib/python3.12/site-packages/PyQt5/bindings
+      - /lib/python3.13/site-packages/PyQt5/bindings
 
   - name: makhber
     buildsystem: cmake-ninja
