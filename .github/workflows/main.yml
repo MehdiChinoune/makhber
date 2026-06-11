@@ -238,7 +238,7 @@ jobs:
           cd $Env:VCPKG_INSTALLATION_ROOT
           git pull origin master
           .\bootstrap-vcpkg.bat
-          vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf
+          vcpkg install zlib gsl muparser liborigin opengl gl2ps gtest pkgconf openssl
 
       - name: Install PyQt
         run: |
@@ -259,6 +259,7 @@ jobs:
             -DPython3_FIND_REGISTRY=NEVER `
             -DPython3_EXECUTABLE=${{ env.pythonLocation }}/python3.exe `
             -DCMAKE_PREFIX_PATH="$Env:GITHUB_WORKSPACE\Qwt" `
+            -DRUNTIME_DIRS="$Env:VCPKG_INSTALLATION_ROOT/installed/$Env:VCPKG_DEFAULT_TRIPLET/bin;$Env:GITHUB_WORKSPACE\Qwt\lib;$Env:Qt5_DIR\bin;$Env:Qt6_DIR\bin" `
             -DBUILD_SHARED_LIBS=ON
 
       - name: Building
@@ -269,6 +270,13 @@ jobs:
         run: |
           $Env:PATH = "$Env:GITHUB_WORKSPACE\Qwt\lib;$Env:PATH"
           ctest --preset msvc-vcpkg -C RelWithDebInfo --repeat until-pass:3
+
+      - name: Packaging
+        run: |
+          choco install nsis --no-progress
+          $Env:PATH = "C:/Program Files (x86)/NSIS;$Env:PATH"
+          cd build\MSVC
+          cpack -G NSIS -C RelWithDebInfo
 
   MINGW:
     name: MINGW-${{ matrix.msystem }}-Qt${{ matrix.QT_VER }}
