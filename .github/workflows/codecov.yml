@@ -1,0 +1,161 @@
+name: Code Coverage
+
+on: 
+  pull_request:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  Ubuntu:
+    runs-on: ubuntu-26.04
+    name: ubuntu-26.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os_ver: "26.04"
+            QT_VER: "6.11"
+          - os_ver: "26.04-arm"
+            QT_VER: "6.11"
+    env:
+      QWT_VER: 6.3.0
+
+    steps:
+      - name: Get Processor Info
+        run : |
+          lscpu | grep name
+          nproc
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Restore cached Qt
+        id: cache-qt
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/Qt
+          key: ${{ runner.os }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-Cache
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ matrix.QT_VER }}
+          cache: ${{ steps.cache-qt.outputs.cache-hit }}
+          dir: ${{ github.workspace }}/Qt
+          archives: qtbase qtsvg qttools qtdeclarative qttranslations icu
+
+      - name: Install prerequisties
+        run: |
+          sudo apt update
+          sudo apt install -y --no-install-recommends \
+            libglu1-mesa-dev \
+            libxcb-xinput0 \
+            libxcb-xkb1 \
+            libxkbcommon-x11-0 \
+            libmuparser-dev \
+            libgsl-dev \
+            libgl2ps-dev \
+            libgtest-dev \
+            xvfb \
+            lcov
+
+      - name: Get GCC version
+        id: gcc-version
+        run:
+          echo "gcc_version=$(gcc -dumpversion)" >> $GITHUB_OUTPUT
+
+      - name: Restore cached Qwt
+        id: cache-qwt
+        uses: actions/cache@v6
+        with:
+          path: ${{ github.workspace }}/Qwt
+          key: ${{ runner.os }}-Qwt-${{ env.QWT_VER }}-Qt-${{ matrix.os_ver }}-${{ matrix.QT_VER }}-gcc-${{ steps.gcc-version.outputs.gcc_version }}
+
+      - name: Build and install Qwt
+        if: steps.cache-qwt.outputs.cache-hit != 'true'
+        run: |
+          wget https://downloads.sourceforge.net/qwt/qwt-${{ env.QWT_VER }}.tar.bz2
+          tar -xf qwt-${{ env.QWT_VER }}.tar.bz2 && cd qwt-${{ env.QWT_VER }}
+          sed -i "s|= \/usr\/local\/qwt-\$\$QWT\_VERSION|= ${GITHUB_WORKSPACE}/Qwt|g" qwtconfig.pri
+          sed -i "s|QWT_CONFIG     += QwtDesigner'||g" qwtconfig.pri
+          sed -i "s|QWT_CONFIG     += QwtExamples||g" qwtconfig.pri
+          sed -i "s|QWT_CONFIG     += QwtPlayground||g" qwtconfig.pri
+          sed -i "s|QWT_CONFIG     += QwtTests||g" qwtconfig.pri
+          qmake qwt.pro
+          make -j$(nproc)
+          make install
+
+      - name: Install Python packages
+        run: |
+          pip3 install sip pyqt6 pyqt-builder numpy
+
+      - name: Configuring
+        run: |
+          cmake \
+            -DCMAKE_BUILD_TYPE=Coverage \
+            -DMAKHBER_BUILD_TESTS=ON \
+            -DCMAKE_PREFIX_PATH=${GITHUB_WORKSPACE}/Qwt \
+            -S . \
+            -B build
+
+      - name: Building
+        run: |
+          xvfb-run make -j$(nproc) -C build
+
+      - name: Testing
+        run: |
+          xvfb-run -a ctest --test-dir build --output-on-failure --repeat until-pass:3
+
+      - name: Generate Coverage Report
+        run: |
+          lcov --directory . --capture --ignore-errors inconsistent ... --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' '*/gcc_64/include/*' '*/Qwt/include/*' '*/makhber/build/*' '*/makhber/3rdparty/*' --output-file coverage.info
+          lcov --list coverage.info
+
+      - uses: codecov/codecov-action@v7
+
+  macos:
+    runs-on: macos-26
+    name: macos
+
+    steps:
+      - name: Get Processor Info
+        run : |
+          sysctl -n machdep.cpu.brand_string
+          sysctl -n hw.logicalcpu
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - name: Install prerequisties
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+        run: |
+          brew install --display-times muparser gsl gl2ps googletest lcov qwt
+
+      - name: Configuring
+        run: |
+          cmake \
+            -DCMAKE_BUILD_TYPE=Coverage \
+            -DMAKHBER_BUILD_TESTS=ON \
+            -S . \
+            -B build
+
+      - name: Building
+        run: |
+          make -j$(sysctl -n hw.logicalcpu) -C build
+
+      - name: Testing
+        run: |
+          ctest --test-dir build --output-on-failure --repeat until-pass:3
+
+      - name: Generate Coverage Report
+        run: |
+          lcov --directory . --capture --ignore-errors inconsistent ... --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' '*/makhber/build/*' '*/makhber/3rdparty/*' --output-file coverage.info
+          lcov --list coverage.info
+
+      - uses: codecov/codecov-action@v7
