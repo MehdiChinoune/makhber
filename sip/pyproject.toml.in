@@ -11,6 +11,7 @@ qmake = "@QMAKE_EXECUTABLE@"
 [tool.sip.metadata]
 name = "makhber"
 requires-dist = "PyQt@QT_VERSION_MAJOR@"
+requires-python = ">=3.10"
 
 [tool.sip.project]
 sip-files-dir = "@CMAKE_CURRENT_SOURCE_DIR@"
