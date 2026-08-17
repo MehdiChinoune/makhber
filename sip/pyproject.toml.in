@@ -16,6 +16,7 @@ requires-python = ">=3.10"
 [tool.sip.project]
 sip-files-dir = "@CMAKE_CURRENT_SOURCE_DIR@"
 sip-include-dirs = ["@PyQt_INCLUDE_DIRS@"]
+abi-version = "@sip_abi@"
 
 # Configure the building of the makhber bindings.
 [tool.sip.bindings.makhber]
