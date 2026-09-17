@@ -1,4 +1,5 @@
 if( TARGET Python3::SABIModule )
+  message(STATUS "Python_SOSABI: ${Python_SOSABI}")
   if("${DISTRO_ID}" STREQUAL "debian" OR "${DISTRO_ID}" STREQUAL "ubuntu")
     execute_process(COMMAND dpkg-architecture -qDEB_HOST_MULTIARCH
       OUTPUT_VARIABLE _DEBIAN_ARCH
@@ -12,6 +13,7 @@ if( TARGET Python3::SABIModule )
     )
   endif()
 else()
+  message(STATUS "Python_SOABI: ${Python_SOABI}")
   execute_process( COMMAND ${Python3_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"
     OUTPUT_VARIABLE _Python3_EXT_SUFFIX
     OUTPUT_STRIP_TRAILING_WHITESPACE

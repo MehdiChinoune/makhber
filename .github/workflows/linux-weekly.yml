@@ -206,6 +206,7 @@ jobs:
 
       - name: Configuring
         run: |
+          python3 -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
           mkdir build && cd build
           cmake .. \
             -DMAKHBER_SCRIPTING_PYTHON=ON \
@@ -285,6 +286,7 @@ jobs:
 
       - name: Configuring
         run: |
+          python3 -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
           mkdir build && cd build
           cmake .. \
             -GNinja \
@@ -355,6 +357,7 @@ jobs:
 
       - name: Configuring
         run: |
+          python3 -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
           mkdir build && cd build
           cmake .. \
             -GNinja \
@@ -434,6 +437,7 @@ jobs:
 
       - name: Configuring
         run: |
+          python3 -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
           mkdir build && cd build
           cmake .. \
             -GNinja \
@@ -509,6 +513,7 @@ jobs:
 
       - name: Configuring
         run: |
+          python3 -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
           mkdir build && cd build
           cmake .. \
             -GNinja \
@@ -603,6 +608,7 @@ jobs:
 
       - name: Configuring
         run: |
+          python3 -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
           mkdir build && cd build
           cmake .. \
             -GNinja \
@@ -672,6 +678,7 @@ jobs:
 
       - name: Configuring
         run: |
+          python3 -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
           mkdir build && cd build
           cmake .. \
             -DCMAKE_BUILD_TYPE=Release \
