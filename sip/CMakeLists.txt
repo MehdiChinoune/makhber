@@ -1,8 +1,22 @@
-
-execute_process( COMMAND ${Python3_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"
-  OUTPUT_VARIABLE _Python3_EXT_SUFFIX
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+if( TARGET Python3::SABIModule )
+  if("${DISTRO_ID}" STREQUAL "debian" OR "${DISTRO_ID}" STREQUAL "ubuntu")
+    execute_process(COMMAND dpkg-architecture -qDEB_HOST_MULTIARCH
+      OUTPUT_VARIABLE _DEBIAN_ARCH
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(_Python3_EXT_SUFFIX ".abi3-${_DEBIAN_ARCH}.so")
+  else()
+    execute_process( COMMAND ${Python3_EXECUTABLE} -c "import sys; import re; import importlib.machinery; sys.stdout.write(';'.join(filter(lambda x: re.search('^\\.abi', x), importlib.machinery.EXTENSION_SUFFIXES)))"
+      OUTPUT_VARIABLE _Python3_EXT_SUFFIX
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  endif()
+else()
+  execute_process( COMMAND ${Python3_EXECUTABLE} -c "import sysconfig; print(sysconfig.get_config_var('EXT_SUFFIX'))"
+    OUTPUT_VARIABLE _Python3_EXT_SUFFIX
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+endif()
 
 set( makhber_SIP_HDR ${CMAKE_CURRENT_BINARY_DIR}/sip.h )
 set_source_files_properties( ${makhber_SIP_HDR} PROPERTIES GENERATED ON )
@@ -179,11 +193,7 @@ endif()
 if( WIN32 )
   set( module_name makhber.pyd )
 else()
-  if( TARGET Python3::SABIModule )
-    set( module_name makhber.abi3.so )
-  else()
-    set( module_name makhber${_Python3_EXT_SUFFIX} )
-  endif()
+  set( module_name makhber${_Python3_EXT_SUFFIX} )
 endif()
 
 if( MULTI_CONFIG )

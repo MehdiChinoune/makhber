@@ -60,7 +60,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.14'
-          pip-install: sip pyqt-builder
+          pip-install: sip!=6.16.1 pyqt-builder
           check-latest: true
 
       - name: Restore cached Qt
@@ -347,7 +347,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '${{ env.PYTHON_VERSION }}'
-          pip-install: sip pyqt-builder
+          pip-install: sip!=6.16.1 pyqt-builder
           check-latest: true
 
       - name: Restore cached Qt

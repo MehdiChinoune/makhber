@@ -182,7 +182,7 @@ parts:
     build-environment:
       - PATH: $HOME/.local/bin:$PATH
     override-build: |
-      pip3 install --break-system-packages sip pyqt-builder
+      pip3 install --break-system-packages sip!=6.16.1 pyqt-builder
       cd $CRAFT_PART_SRC
       sip-build --confirm-license \
         --build-dir ../build \
