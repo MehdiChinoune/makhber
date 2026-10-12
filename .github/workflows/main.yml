@@ -365,13 +365,13 @@ jobs:
           ctest --preset msys2 --repeat until-pass:3
 
   macos:
-    runs-on: macos-${{ matrix.macos_ver }}
-    name: macos-${{ matrix.macos_ver }}-Qt${{ matrix.QT_VER }}
+    runs-on: ${{ matrix.macos_ver }}
+    name: ${{ matrix.macos_ver }}-Qt${{ matrix.QT_VER }}
     strategy:
       fail-fast: false
       matrix:
         QT_VER: [5, 6]
-        macos_ver: [15, 26]
+        macos_ver: [macos-26, xcode-27]
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
       CCACHE_DIR: build/ccache
@@ -410,11 +410,16 @@ jobs:
             export PATH=$(brew --prefix)/opt/qt@5/bin:$PATH
             QWT_PATH=$(brew --prefix)/opt/qwt-qt5
           fi
+          if [[ "${{ matrix.macos_ver }}" == "xcode-27" ]]; then
+            _macos_ver=27
+          else
+            _macos_ver=26
+          fi
           cmake \
             --preset macos \
             -DCMAKE_PREFIX_PATH=${QWT_PATH} \
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=${{ matrix.macos_ver }}
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=${_macos_ver}
 
       - name: Building
         run: |
