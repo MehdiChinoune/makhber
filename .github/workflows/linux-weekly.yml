@@ -641,6 +641,10 @@ jobs:
     name: Alpine
     runs-on: ubuntu-26.04
     container: alpine:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        QT_VER: [5, 6]
 
     steps:
       - uses: actions/checkout@v1
@@ -655,16 +659,16 @@ jobs:
             cmake \
             make \
             pkgconf \
-            qt5-qtbase \
-            qt5-qtsvg \
-            qt5-qttools-dev \
+            qt${{ matrix.QT_VER }}-qtbase-dev \
+            qt${{ matrix.QT_VER }}-qtsvg-dev \
+            qt${{ matrix.QT_VER }}-qttools-dev \
             glu-dev \
             gsl-dev \
             muparser-dev \
             qwt-dev \
             python3-dev \
             py3-sip \
-            py3-qt5 \
+            py3-qt${{ matrix.QT_VER }} \
             py3-pyqt-builder \
             gtest-dev \
             xvfb-run \
